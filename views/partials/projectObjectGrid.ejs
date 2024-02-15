@@ -1,0 +1,36 @@
+<div class="row" data-masonry='{"percentPosition": true }'>
+    <% objects.forEach(creation => { %>
+  <% if(creation.coverImagePath != null){ %>
+  <div class="col-sm-6 col-lg-4 mb-4">
+    <a href="/projects/<%= showProject.id %>/creation/<%= creation._id %>">
+    <div class="card">
+      <img width="100%" src="<%= creation.coverImagePath %>">
+      <div class="card-body">
+        <h5 class="card-title"><%= creation.name %></h5>
+        <p class="card-text"><%= creation.description %></p>
+        <!-- <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p> -->
+      </div>
+    </div>
+  </a>
+  </div>
+  <% } %>
+  <% if(creation.coverImagePath == null) { %>
+    
+  <div class="col-sm-6 col-lg-4 mb-4">
+    <a href="/projects/<%= showProject.id %>/creation/<%= creation._id %>">
+    <div class="card text-bg-primary text-center p-3">
+      <figure class="mb-0">
+        <blockquote class="blockquote">
+          <p><%= creation.name %></p>
+        </blockquote>
+        <figcaption class="blockquote-footer mb-0 text-white">
+          <%= creation.description %>
+        </figcaption>
+      </figure>
+    </div>
+</a>
+  </div>
+
+  <% } %>
+  <% }) %>
+</div>

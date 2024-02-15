@@ -1,0 +1,11 @@
+<div>
+    <h1>New <%= tool.title %></h1>
+    <p class="lead"><%= tool.description %></p>
+    <form action="/<%= tool.link %>" method="POST">
+        <div><%- include(`../${tool.stage}/${tool.folder}/_form_fields`, { object }) %></div>
+        <div class="btn-row">
+            <a class="btn btn-primary" href="/<%= tool.link %>">Cancel</a>
+            <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+    </form>
+</div>

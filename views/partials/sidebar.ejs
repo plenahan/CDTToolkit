@@ -1,0 +1,287 @@
+<div style="margin-top: 5rem; margin-left: 1rem; z-index: 1500; max-width: 250px;" class="fixed-top">
+    <button style="background-color: white; border: none;"><svg xmlns="http://www.w3.org/2000/svg" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" data-bs-toggle="collapse" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+    <!-- <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Button</button> -->
+    <div class="collapse collapse-horizontal card card-body" id="collapseExample" style="max-width: 250px;">
+        <!-- <div class="card card-body"> -->
+            <div class="flex-shrink-0 p-3" style="width: 250px;">
+                <!-- <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none">
+                  <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+                  <span class="fs-5 fw-semibold">Collapsible</span>
+                </a> -->
+                <ul class="list-unstyled ps-0">
+                  <!-- <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
+                      Home
+                    </button>
+                    <div class="collapse" id="home-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Updates</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Reports</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                      Dashboard
+                    </button>
+                    <div class="collapse" id="dashboard-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a></li>
+                      </ul>
+                    </div>
+                  </li> -->
+                  <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+                      Creations
+                    </button>
+                    <div class="collapse" id="orders-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#empathize-collapse" aria-expanded="false">
+                            Empathize
+                          </button>
+                          <div class="collapse" id="empathize-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#empathymap-collapse" aria-expanded="false">
+                                  Empathy Maps
+                                </button>
+                                <div class="collapse" id="empathymap-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <% if(creations.empathymaps){ creations.empathymaps.forEach(empathymap => { %>
+                                      <li><a id="<%= empathymap.id %>" href="/empathymaps/<%= empathymap.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= empathymap.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#journeymap-collapse" aria-expanded="false">
+                                  Journey Maps
+                                </button>
+                                <div class="collapse" id="journeymap-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                                    <% if(creations.journeymaps){ creations.journeymaps.forEach(journeymap => { %>
+                                      <li><a id="<%= journeymap.id %>" draggable="true" ondragstart="drag(event)" href="/journeymaps/<%= journeymap.id %>" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= journeymap.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#persona-collapse" aria-expanded="false">
+                                  Personas
+                                </button>
+                                <div class="collapse" id="persona-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.personas){ creations.personas.forEach(persona => { %>
+                                      <li><a id="<%= persona.id %>" href="/personas/<%= persona.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= persona.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#define-collapse" aria-expanded="false">
+                            Define
+                          </button>
+                          <div class="collapse" id="define-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#statement-collapse" aria-expanded="false">
+                                  Statements
+                                </button>
+                                <div class="collapse" id="statement-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.statements){ creations.statements.forEach(statement => { %>
+                                      <li><a id="<%= statement.id %>" href="/statements/<%= statement.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= statement.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#abstractionladder-collapse" aria-expanded="false">
+                                  Abstraction Ladders
+                                </button>
+                                <div class="collapse" id="abstractionladder-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.abstractionladders){ creations.abstractionladders.forEach(abstractionladder => { %>
+                                      <li><a id="<%= abstractionladder.id %>" href="/abstractionladders/<%= abstractionladder.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= abstractionladder.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#rock-collapse" aria-expanded="false">
+                                  Rocks
+                                </button>
+                                <div class="collapse" id="rock-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.rocks){ creations.rocks.forEach(rock => { %>
+                                      <li><a id="<%= rock.id %>" href="/rocks/<%= rock.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= rock.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#ideate-collapse" aria-expanded="false">
+                            Ideate
+                          </button>
+                          <div class="collapse" id="ideate-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#lotusblossom-collapse" aria-expanded="false">
+                                  Lotus Blossoms
+                                </button>
+                                <div class="collapse" id="lotusblossom-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.lotusblossoms){ creations.lotusblossoms.forEach(lotusblossom => { %>
+                                      <li><a id="<%= lotusblossom.id %>" href="/lotusblossoms/<%= lotusblossom.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= lotusblossom.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#brainstorm-collapse" aria-expanded="false">
+                                  Brainstorms
+                                </button>
+                                <div class="collapse" id="brainstorm-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.brainstorms){ creations.brainstorms.forEach(brainstorm => { %>
+                                      <li><a id="<%= brainstorm.id %>" href="/brainstorms/<%= brainstorm.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= brainstorm.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#prototype-collapse" aria-expanded="false">
+                            Prototype
+                          </button>
+                          <div class="collapse" id="prototype-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#prototypes-collapse" aria-expanded="false">
+                                  Prototypes
+                                </button>
+                                <div class="collapse" id="prototypes-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.prototypes){ creations.prototypes.forEach(prototype => { %>
+                                      <li><a id="<%= prototype.id %>" href="/prototypes/<%= prototype.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= prototype.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                        <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#test-collapse" aria-expanded="false">
+                            Test
+                          </button>
+                          <div class="collapse" id="test-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                              <li class="mb-1 link-body-emphasis text-decoration-none rounded" style="margin-left: 10px;">
+                                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#tests-collapse" aria-expanded="false">
+                                  Tests
+                                </button>
+                                <div class="collapse" id="tests-collapse">
+                                  <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                                    <% if(creations.tests){ creations.tests.forEach(test => { %>
+                                      <li><a id="<%= test.id %>" href="/tests/<%= test.id %>" draggable="true" ondragstart="drag(event)" class="link-body-emphasis d-inline-flex text-decoration-none rounded"><%= test.name %></a></li>
+                                    <% })} %>
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Journey Maps</a></li>
+                                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Personas</a></li> -->
+                                    <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li> -->
+                                  </ul>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="my-3"></li>
+                  <li class="mb-1">
+                    <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+                      Account
+                    </button>
+                    <div class="collapse" id="account-collapse">
+                      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                        <li><a href="/projects" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Projects</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign out</a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  
+                </ul>
+                <a href="/notes"><h6>Notes:</h6></a>
+                <ul>
+                  <% if(creations.notes){ creations.notes.forEach(note => { %>
+                    <div style="display: flex;">
+                    <form method="POST" action="/notes/<%= note.id %>?_method=DELETE">
+                      <button style="border: none; background-color: white;" type="submit"><svg style="color: red;" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+                    </form>
+                    <li style="list-style: none;" id="<%= note.id %>"><a href="/notes/<%= note.id %>"><%= note.name %></a></li>
+                  </div>
+                  <% })} %>
+                  </ul>
+                <form action="/notes/general/new" method="POST">
+                  <input name="title" type="text">
+                  <textarea name="description" id="" cols="20" rows="2"></textarea>
+                  <button class="btn btn-primary" type="submit">Create</button>
+                </form>
+                
+              </div>
+              
+        </div>
+      <!-- </div> -->
+</div>

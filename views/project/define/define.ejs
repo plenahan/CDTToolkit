@@ -1,0 +1,62 @@
+<main class="container py-5">
+  <a style="border-width: 1px; border-color: black;" class="btn" href="/<%= tool.link %>/<%= showProject.id %>">Back</a>
+    <h1><%= showProject.name %></h1>
+    <p class="lead"><%= showProject.description %></p>
+    <%- include('../../partials/buttons', { link: `${tool.link}/${showProject.id}`, creation: showProject}) %>
+    <hr class="my-5">
+<h2>Define</h2>
+<p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget nisl non libero hendrerit bibendum eget in mauris. Morbi ut sodales felis, sed consequat eros. In et tortor imperdiet, rhoncus sapien eu, accumsan neque. Nullam lacinia suscipit posuere. Donec at urna eget lacus molestie consectetur. Aliquam eget finibus velit, in laoreet nisi. Suspendisse rhoncus luctus condimentum. Suspendisse porttitor neque id sem consequat rutrum. Aliquam venenatis iaculis consectetur. Suspendisse potenti. Praesent ut mauris vel nulla scelerisque rutrum. Fusce laoreet augue magna, ac ultrices sem commodo sed. Integer euismod vel nisi et commodo. Mauris sapien felis, scelerisque et posuere vitae, luctus non purus.<br><br>Etiam auctor porta nibh sed congue. Fusce condimentum, est in fringilla posuere, sapien ligula aliquet dolor, in fermentum libero dui quis lorem. Maecenas posuere velit sed augue condimentum volutpat. Donec id varius tortor. Nullam efficitur tellus nec ornare aliquam. Proin maximus eros quis eleifend imperdiet. Vivamus vehicula ac est quis gravida. Nam maximus lectus nec tincidunt pharetra. Vivamus vel nibh vitae neque dictum luctus elementum ut diam. Integer leo quam, semper in faucibus vel, rhoncus id tellus. Quisque posuere nibh sit amet eros interdum laoreet a eu elit. Nunc faucibus pellentesque arcu consectetur lacinia. Aenean mattis neque in cursus venenatis. Phasellus ipsum mauris, dignissim ut massa sed, commodo convallis massa. </p>
+<div class="row" data-masonry='{"percentPosition": true }'>
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card" style="background-color: mediumaquamarine;">
+      <img width="100%" src="">
+      <div class="card-body">
+        <a href="/<%= tool.link %>/<%= showProject.id %>/statements" style="color: black;"><h5 class="card-title">Need Statements</h5></a>
+        <p class="card-text">description</p>
+        <div>Your Need Statements:</div>
+        <% statements.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div style="margin: .5rem;">
+        <% }) %>
+      </div>
+    </div>
+</div>
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card" style="background-color: mediumaquamarine;">
+      <img width="100%" src="">
+      <div class="card-body">
+        <a href="/<%= tool.link %>/<%= showProject.id %>/rocks" style="color: black;"><h5 class="card-title">Rocks</h5></a>
+        <p class="card-text">description</p>
+        <div>Your Rocks:</div>
+        <% rocks.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+</div>
+<div class="col-sm-6 col-lg-4 mb-4">
+    <div class="card" style="background-color: mediumaquamarine;">
+      <img width="100%" src="">
+      <div class="card-body">
+        <a href="/<%= tool.link %>/<%= showProject.id %>/abstractionladders" style="color: black;"><h5 class="card-title">Abstraction Ladders</h5></a>
+        <p class="card-text">description</p>
+        <div>Your Abstraction Ladders:</div>
+        <% abstractionLadders.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+</div>
+</div>
+</main>

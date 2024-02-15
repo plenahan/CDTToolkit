@@ -1,0 +1,45 @@
+<div class="form-row">
+    <div class="form-item">
+        <label>Name*</label>
+        <input type="text" name="name" value="<%= object.name %>">
+    </div>
+    <div class="form-item">
+        <label>Description</label>
+        <textarea name="description"><%= object.description %></textarea>
+    </div>
+    <div class="form-item form-item-no-grow">
+        <label>Cover</label>
+        <input type="file" name="cover" class="image-cover filepond">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-item">
+        <label>Data:</label>
+        <textarea rows="5" name="data"><%= object.data %></textarea>
+    </div>
+    <div class="form-item">
+        <label>Metric:</label>
+        <input type="text" name="metric" value="<%= object.metric %>">
+    </div>
+    <div class="form-item">
+        <label>Goal:</label>
+        <input type="text" name="goal" value="<%= object.goal %>">
+    </div>
+</div>
+<!-- <div class="form-row">
+    <div class="form-item form-item-no-grow">
+        <label>Cover</label>
+        <input type="file" name="cover" class="image-cover filepond">
+    </div>
+    <div class="form-item">
+        <label>Affiliation</label>
+        <select name="status">
+            < if(object.status == 'private') { %> <option selected label="Private" value="private"></option> < } else { %> <option label="Private" value="private"></option> < } %>
+            < teams.forEach(team => { %>
+                < if(object.status == team.title) { %> <option selected id="<= team.id %>" label="<= team.title %>" value="<= team.title %>"></option> < } else { %> <option id="<= team.id %>" label="<= team.title %>" value="<= team.title %>"></option> < } %>
+            < }) %>
+            < if(object.status == 'public') { %> <option selected label="Public" value="public"></option> < } else { %> <option label="Public" value="public"></option> < } %>
+        </select>
+    </div>
+</div>
+<input type="text" name="type" value="basic" style="display: none;"> -->

@@ -1,0 +1,132 @@
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+/**
+ * Client id = 
+ * Client Secret = 
+ */
+
+const express = require('express')
+const app = express()
+const expressLayouts = require('express-ejs-layouts')
+const methodOverride = require('method-override')
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+const passport = require('passport')
+require('./config/passport')(passport)
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+
+const indexRouter = require('./routes/index')
+const learnRouter = require('./routes/learn')
+const createRouter = require('./routes/create')
+const empathizeRouter = require('./routes/empathize/empathize')
+const defineRouter = require('./routes/define/define')
+const ideateRouter = require('./routes/ideate/ideate')
+const prototypeRouter = require('./routes/prototype/prototype')
+const testRouter = require('./routes/test/test')
+
+const projectRouter = require('./routes/projects')
+const personaRouter = require('./routes/empathize/personas')
+const empathyMapRouter = require('./routes/empathize/empathymaps')
+const journeyMapRouter = require('./routes/empathize/journeymaps')
+const abstractionLadderRouter = require('./routes/define/abstractionladders')
+const rockRouter = require('./routes/define/rocks')
+const statementRouter = require('./routes/define/statements')
+const lotusBlossomRouter = require('./routes/ideate/lotusblossoms')
+const brainstormRouter = require('./routes/ideate/brainstorms')
+const prototypesRouter = require('./routes/prototype/prototypes')
+const testsRouter = require('./routes/test/tests')
+const notesRouter = require('./routes/notes')
+const authRouter = require('./routes/account/auth')
+const accountRouter = require('./routes/account/index')
+
+
+const bodyParser = require('body-parser')
+// const { Objects } = require('./middleware/Objects')
+const Persona = require('./models/empathize/persona')
+const EmpathyMap = require('./models/empathize/empathymap')
+const JourneyMap = require('./models/empathize/journeymap')
+const Statement = require('./models/define/statement')
+const Rock = require('./models/define/rock')
+const AbstractionLadder = require('./models/define/abstractionladder')
+const LotusBlossom = require('./models/ideate/lotusblossom')
+const Brainstorm = require('./models/ideate/brainstorm')
+const Prototype = require('./models/prototype/prototype')
+const Test = require('./models/test/test')
+const Creation = require('./models/creation')
+const SortBy = require('./models/sortby')
+const Thing = require('./models/thing')
+const Note = require('./models/note')
+const User = require('./models/user')
+
+app.set('view engine', 'ejs')
+app.set('views', __dirname + '/views')
+app.set('layout', 'layouts/layout')
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
+app.use(expressLayouts)
+app.use(methodOverride('_method'))
+app.use(express.static('public'))
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.DATABASE_URL })
+}))
+app.use(passport.initialize()) 
+app.use(passport.session())
+
+
+app.use('*', async (req, res, next) => {
+    req.Creations = new Creation({
+        personas: await Thing.find({ creationType: 'Persona' }),
+        empathymaps: await Thing.find({ creationType: 'EmpathyMap' }),
+        journeymaps: await Thing.find({ creationType: 'JourneyMap' }),
+        statements: await Thing.find({ creationType: 'Statement' }),
+        rocks: await Thing.find({ creationType: 'Rock' }),
+        abstractionladders: await Thing.find({ creationType: 'AbstractionLadder' }),
+        lotusblossoms: await Thing.find({ creationType: 'LotusBlossom' }),
+        brainstorms: await Thing.find({ creationType: 'Brainstorm' }),
+        prototypes: await Thing.find({ creationType: 'Prototype' }),
+        tests: await Thing.find({ creationType: 'Test' }),
+        notes: await Note.find({ stage: 'general' })
+    })
+    imageTypes = imageMimeTypes
+    req.sortby = new SortBy({ title: req.query.SortBy })
+    req.note = new Note()
+    // req.User = User.findById(req.user.id)
+    next()
+})
+
+const mongoose = require('mongoose')
+const { ensureAuth } = require('./middleware/auth')
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', error => console.error(error))
+db.once('open', () => console.log('Connected to Mongoose'))
+
+app.use('/', indexRouter)
+app.use('/learn', learnRouter)
+app.use('/create', createRouter)
+app.use('/empathize', empathizeRouter)
+app.use('/define', defineRouter)
+app.use('/ideate', ideateRouter)
+app.use('/prototype', prototypeRouter)
+app.use('/test', testRouter)
+
+app.use('/projects', projectRouter)
+app.use('/personas', personaRouter)
+app.use('/empathymaps', empathyMapRouter)
+app.use('/journeymaps', journeyMapRouter)
+app.use('/abstractionladders', abstractionLadderRouter)
+app.use('/rocks', rockRouter)
+app.use('/statements', statementRouter)
+app.use('/brainstorms', brainstormRouter)
+app.use('/lotusblossoms', lotusBlossomRouter)
+app.use('/prototypes', prototypesRouter)
+app.use('/tests', testsRouter)
+app.use('/notes', notesRouter)
+app.use('/auth', authRouter)
+app.use('/account', accountRouter)
+
+app.listen(process.env.PORT || 3000)

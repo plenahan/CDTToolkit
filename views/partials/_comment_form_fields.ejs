@@ -1,0 +1,10 @@
+<div class="form-row">
+    <div class="form-item">
+        <label>Description</label>
+        <textarea name="description"><%= note.description %></textarea>
+    </div>
+</div>
+<div style="display: none;">
+    <input type="text" name="connectedObject" value="<%= creation.id %>">
+    <input type="text" name="stage" value="<%= tool.stage %>">
+</div>

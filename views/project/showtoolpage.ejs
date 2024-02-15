@@ -1,0 +1,7 @@
+<main class="container py-5">
+    <h1><%= showProject.name %></h1>
+    <p class="lead"><%= showProject.description %></p>
+    <%- include('../partials/buttons', { link: `projects/${showProject.id}/${tool.link}`, creation: showProject}) %>
+    <hr class="my-5">
+<%- include(`../partials/showPage`) %>
+</main>

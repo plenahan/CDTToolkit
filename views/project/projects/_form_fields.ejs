@@ -1,0 +1,12 @@
+<input value="<%= object.name %>" type="text" name="name">
+    <select name="children" id="children" multiple>
+        <% things.forEach(thing => { %>
+          <% object.children.forEach(child => { %>
+            <% if (thing.id == child.id) { %>
+              <option selected label="<%= thing.name %>" value="<%= thing.id %>">
+            <% } %>
+          <% }) %>
+        <% }) %>
+    </select>
+    <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    <%- include('../../partials/multiselect.ejs', { id: 'children' }) %>

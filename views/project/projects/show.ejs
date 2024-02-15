@@ -1,0 +1,166 @@
+<main class="container py-5">
+      <h1><%= showProject.name %></h1>
+      <p class="lead"><%= showProject.description %></p>
+    <%- include('../../partials/buttons', { link: tool.link, creation: showProject }) %>
+ 
+    <hr class="my-5">
+    
+    
+    <div class="row" data-masonry='{"percentPosition": true }'>
+    <div class="col-sm-6 col-lg-3 mb-4">
+      <div class="card" style="background-color: lightblue;">
+        <img width="100%" src="">
+        <div class="card-body">
+          <a href="/<%= tool.link %>/<%= showProject.id %>/empathize" style="color: black;"><h5 class="card-title">Empathize</h5></a><%= personas.length + empathyMaps.length + journeyMaps.length %>
+          <p class="card-text">description</p>
+          <div><a href="/<%= tool.link %>/<%= showProject.id %>/personas" style="color: black;">Personas:</a><%= personas.length %><a style="float: right; color: black;" href="/personas/new">Add+</a></div>
+          <% personas.forEach(object =>{ %>
+            <div class="card" style="margin: .5rem; background-color: rgb(103, 149, 187); padding: .3rem;">
+            <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+              <%= object.name %>
+            </a>
+          </div>
+          <% }) %>
+          <div><a href="/<%= tool.link %>/<%= showProject.id %>/empathymaps" style="color: black;">Empathy Maps:</a><%= empathyMaps.length %><a style="float: right; color: black;" href="/projects/<%= showProject.id %>/empathymaps/new">Add+</a></div>
+          <% empathyMaps.forEach(object =>{ %>
+            <div class="card" style="margin: .5rem; background-color: rgb(103, 149, 187); padding: .3rem;">
+            <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+              <%= object.name %>
+            </a>
+          </div style="margin: .5rem;">
+          <% }) %>
+          <div><a href="/<%= tool.link %>/<%= showProject.id %>/journeymaps" style="color: black;">Journey Maps:</a><%= journeyMaps.length %><a style="float: right; color: black;" href="/journeymaps/new">Add+</a></div>
+          <% journeyMaps.forEach(object =>{ %>
+            <div class="card" style="margin: .5rem; background-color: rgb(103, 149, 187); padding: .3rem;">
+            <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+              <%= object.name %>
+            </a>
+          </div>
+          <% }) %>
+        </div>
+      </div>
+  </div>
+  <div class="col-sm-6 col-lg-3 mb-4">
+    <div class="card" style="background-color: mediumaquamarine;">
+    <img width="100%" src="">
+    <div class="card-body">
+      <a href="/<%= tool.link %>/<%= showProject.id %>/define" style="color: black;"><h5 class="card-title">Define</h5></a><%= statements.length + abstractionLadders.length + rocks.length %>
+        <p class="card-text">description</p>
+        <div><a href="/<%= tool.link %>/<%= showProject.id %>/statements" style="color: black;">Need Statements:</a><%= statements.length %><a style="float: right; color: black;" href="/statements/new">Add+</a></div>
+        <% statements.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div>
+        <% }) %>
+        <div><a href="/<%= tool.link %>/<%= showProject.id %>/abstractionladders" style="color: black;">Abstraction Ladders:</a><%= abstractionLadders.length %><a style="float: right; color: black;" href="/abstractionladders/new">Add+</a></div>
+        <% abstractionLadders.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div>
+        <% }) %>
+        <div><a href="/<%= tool.link %>/<%= showProject.id %>/rocks" style="color: black;">Rocks:</a><%= rocks.length %><a style="float: right; color: black;" href="/rocks/new">Add+</a></div>
+        <% rocks.forEach(object =>{ %>
+          <div class="card" style="margin: .5rem; background-color: rgb(61, 151, 131); padding: .3rem;">
+          <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+            <%= object.name %>
+          </a>
+        </div>
+        <% }) %>
+    </div>
+    </div>
+</div>
+<div class="col-sm-6 col-lg-3 mb-4">
+  <div class="card" style="background-color: palegoldenrod;">
+  <img width="100%" src="">
+  <div class="card-body">
+    <a href="/<%= tool.link %>/<%= showProject.id %>/ideate" style="color: black;"><h5 class="card-title">Ideate</h5></a><%= brainstorms.length + lotusBlossoms.length %>
+      <p class="card-text">description</p>
+      <div><a href="/<%= tool.link %>/<%= showProject.id %>/lotusblossoms" style="color: black;">Lotus Blossoms:</a><%= lotusBlossoms.length %><a style="float: right; color: black;" href="/lotusblossoms/new">Add+</a></div>
+      <% lotusBlossoms.forEach(object =>{ %>
+        <div class="card" style="margin: .5rem; background-color: rgb(215, 185, 108); padding: .3rem;">
+        <a href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>" style="color: white; text-align: center;">
+          <%= object.name %>
+        </a>
+      </div>
+      <% }) %>
+      <div><a href="/<%= tool.link %>/<%= showProject.id %>/brainstorms" style="color: black;">Brainstorms:</a><%= brainstorms.length %><a style="float: right; color: black;" href="/brainstorms/new">Add+</a></div>
+      <% brainstorms.forEach(object =>{ %>
+        <div class="card" style="margin: .5rem; background-color: rgb(215, 185, 108); padding: .3rem;">
+        <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+          <%= object.name %>
+        </a>
+      </div>
+      <% }) %>
+  </div>
+  </div>
+</div>
+<div class="col-sm-6 col-lg-3 mb-4">
+  <div class="card" style="background-color: lightsalmon;">
+  <img width="100%" src="">
+  <div class="card-body">
+      <a href="/<%= tool.link %>/<%= showProject.id %>/prototype" style="color: black;"><h5 class="card-title">Prototype</h5></a><%= prototypes.length %>
+      <p class="card-text">description</p>
+      <div><a href="/<%= tool.link %>/<%= showProject.id %>/prototypes" style="color: black;">Prototypes:</a><%= prototypes.length %><a style="float: right; color: black;" href="/prototypes/new">Add+</a></div>
+      <% prototypes.forEach(object =>{ %>
+        <div class="card" style="margin: .5rem; background-color: darksalmon; padding: .3rem;">
+        <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+          <%= object.name %>
+        </a>
+      </div>
+      <% }) %>
+  </div>
+  </div>
+</div>
+<div class="col-sm-6 col-lg-3 mb-4">
+  <div class="card" style="background-color: lightcoral;">
+  <img width="100%" src="">
+  <div class="card-body">
+      <a href="/<%= tool.link %>/<%= showProject.id %>/test" style="color: black;"><h5 class="card-title">Test</h5></a><%= tests.length %>
+      <p class="card-text">description</p>
+      <div><a href="/<%= tool.link %>/<%= showProject.id %>/tests" style="color: black;">Tests:</a><%= tests.length %><a style="float: right; color: black;" href="/tests/new">Add+</a></div>
+      <% tests.forEach(object =>{ %>
+        <div class="card" style="margin: .5rem; background-color: rgb(159, 72, 72); padding: .3rem;">
+        <a style="color: white; text-align: center;" href="/<%= tool.link %>/<%= showProject.id %>/creation/<%= object.id %>">
+          <%= object.name %>
+        </a>
+      </div>
+      <% }) %>
+  </div>
+  </div>
+</div>
+</div>
+  <% if((personas.length + empathyMaps.length + journeyMaps.length) % 5 == 0 && showProject.reflection == 'false' && personas.length + empathyMaps.length + journeyMaps.length > 0) { %>
+        <form id="form2" action="/projects/<%= showProject.id %>?_method=PUT" method="POST">
+          <div>
+          <%- include('./_form_fields') %>
+          <input style="display: none;" name="reflection" value="true" type="text">
+        </div>
+        </form>
+        <h4>You have created <%= personas.length + empathyMaps.length + journeyMaps.length %> tools in the empathize stage! Reflect on your process.</h4>
+        <form id="form1" action="/notes/new" method="POST">
+          <div class="form-row">
+            <div class="form-item">
+                <textarea name="description"><%= note.description %></textarea>
+            </div>
+        </div>
+        <div style="display: none;">
+          <input type="text" name="connectedObject" value="<%= creation.id %>">
+          <input type="text" name="stage" value="">
+        </div>
+        </form>
+        <button class="btn btn-primary" type="submit" onclick="submitForms()">Create</button>
+        <script>
+          submitForms = function(){
+            document.getElementById("form1").submit();
+            document.getElementById("form2").submit();
+          }
+        </script>
+    <% } %>
+        <% reflections.forEach(reflection => { %>
+          <%= reflection.description %>
+        <% })  %>
+  </main>

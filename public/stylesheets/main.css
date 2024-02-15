@@ -1,0 +1,14 @@
+@import 'shared/variables.css';
+@import 'shared/forms.css';
+@import 'shared/carousel.css';
+@import 'shared/features.css';
+@import 'shared/navbars.css';
+@import 'shared/sidebars.css';
+@import 'shared/images.css';
+
+#div1 {
+    width: 350px;
+    height: 70px;
+    padding: 10px;
+    border: 1px solid #aaaaaa;
+}

@@ -1,0 +1,52 @@
+<%- include('./buttons', { link: tool.link, creation: creation }) %>
+
+<% if(creation.coverImagePath != null) { %>
+<h2 class="page-header"><%= creation.name %></h2>
+<div class="image-details">
+    
+    <div>
+        <img width="350px" src="<%= creation.coverImagePath %>">
+        <!-- < if(persona.user.id == user) { %> -->
+        <!-- < } %> -->
+    </div>
+    
+    <div class="image-details-grid">
+        <%- include(`../${tool.stage}/${tool.folder}/show`) %>
+    </div>
+</div>
+<% } %>
+<% if(creation.coverImagePath == null) { %>
+    <h2 class="page-header"><%= creation.name %></h2>
+    <div class="image-details">
+        <%- include(`../${tool.stage}/${tool.folder}/show`) %>
+    </div>
+    <!-- < if(persona.user.id == user) { %> -->
+
+        <!-- < } %> -->
+<% } %>
+<% if (comments.length > 0) { %>
+    <h2>Comments</h2>
+    <div class="list-group">
+    <% comments.forEach(comment => { %>
+        
+            <div class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+              <svg style="color: steelblue;" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <div class="d-flex gap-2 w-100 justify-content-between">
+                <div>
+                  <h6 class="mb-0"><%= comment.description %></h6>
+                  <small class="opacity-50 text-nowrap"><%= comment.user.email %></small>
+                </div>
+                <small class="opacity-50 text-nowrap"><%= comment.createdAt %></small>
+              </div>
+              <%- include('./deleteForm', { url: `/notes/${comment.id}` }) %>
+            </div>
+    <% }) %>
+</div>
+<% } %>
+<form action="/notes/new" method="POST">
+    <h3>Add Comment +</h3>
+    <%- include('./_comment_form_fields') %>
+    <div class="btn-row">
+        <button class="btn btn-primary" type="submit">Create</button>
+    </div>
+</form>
