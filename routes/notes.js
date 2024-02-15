@@ -11,10 +11,10 @@ const tool = {
 }
 
 router.get('/', async (req, res) => {
-    let query = Note.find({  })
+    let query = Note.find({ user: req.user })
     // const sortby = new SortBy({ name: req.query.SortBy })
     if (req.query.name != null && req.query.name != '') {
-        query = query.regex('name', new RegExp(req.query.name, 'i'))
+        query = query.regex('description', new RegExp(req.query.name, 'i'))
     }
     if (req.query.createdBefore != null && req.query.createdBefore != '') {
         query = query.lte('createdAt', req.query.createdBefore)
@@ -22,13 +22,13 @@ router.get('/', async (req, res) => {
     if (req.query.createdAfter != null && req.query.createdAfter != '') {
         query = query.gte('createdAt', req.query.createdAfter)
     }
-    if(req.sortby.name == 'A2Z'){
-        query = query.sort( {name: 'asc'} )
+    if(req.sortby.title == 'A2Z'){
+        query = query.sort( {description: 'asc'} )
     }
-    else if (req.sortby.name == 'Z2A'){
-        query = query.sort( {name: 'desc'} )
+    else if (req.sortby.title == 'Z2A'){
+        query = query.sort( {description: 'desc'} )
     }
-    else if (req.sortby.name == 'New2Old'){
+    else if (req.sortby.title == 'New2Old'){
         query = query.sort( {createdAt: 'desc'} )
     }
     else {

@@ -13,7 +13,7 @@ const tool = {
 }
 
 router.get('/', async (req, res) => {
-    let query = Project.find({  })
+    let query = Project.find({ users: req.user.id })
     // const sortby = new SortBy({ name: req.query.SortBy })
     if (req.query.name != null && req.query.name != '') {
         query = query.regex('name', new RegExp(req.query.name, 'i'))
@@ -58,7 +58,8 @@ router.get('/new', async (req, res) => {
 router.post('/', async(req, res) => {
     const project = new Project({
         name: req.body.name,
-        children: req.body.children
+        children: req.body.children,
+        users: [req.user]
     })
     try {
         const newProject = await project.save()

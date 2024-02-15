@@ -79,17 +79,17 @@ app.use(passport.session())
 
 app.use('*', async (req, res, next) => {
     req.Creations = new Creation({
-        personas: await Thing.find({ creationType: 'Persona' }),
-        empathymaps: await Thing.find({ creationType: 'EmpathyMap' }),
-        journeymaps: await Thing.find({ creationType: 'JourneyMap' }),
-        statements: await Thing.find({ creationType: 'Statement' }),
-        rocks: await Thing.find({ creationType: 'Rock' }),
-        abstractionladders: await Thing.find({ creationType: 'AbstractionLadder' }),
-        lotusblossoms: await Thing.find({ creationType: 'LotusBlossom' }),
-        brainstorms: await Thing.find({ creationType: 'Brainstorm' }),
-        prototypes: await Thing.find({ creationType: 'Prototype' }),
-        tests: await Thing.find({ creationType: 'Test' }),
-        notes: await Note.find({ stage: 'general' })
+        personas: await Thing.find({ creationType: 'Persona', user: req.user }),
+        empathymaps: await Thing.find({ creationType: 'EmpathyMap', user: req.user }),
+        journeymaps: await Thing.find({ creationType: 'JourneyMap', user: req.user }),
+        statements: await Thing.find({ creationType: 'Statement', user: req.user }),
+        rocks: await Thing.find({ creationType: 'Rock', user: req.user }),
+        abstractionladders: await Thing.find({ creationType: 'AbstractionLadder', user: req.user }),
+        lotusblossoms: await Thing.find({ creationType: 'LotusBlossom', user: req.user }),
+        brainstorms: await Thing.find({ creationType: 'Brainstorm', user: req.user }),
+        prototypes: await Thing.find({ creationType: 'Prototype', user: req.user }),
+        tests: await Thing.find({ creationType: 'Test', user: req.user }),
+        notes: await Note.find({ stage: 'general', user: req.user })
     })
     imageTypes = imageMimeTypes
     req.sortby = new SortBy({ title: req.query.SortBy })
@@ -129,4 +129,4 @@ app.use('/notes', notesRouter)
 app.use('/auth', authRouter)
 app.use('/account', accountRouter)
 
-app.listen(process.env.PORT || 3000)
+app.listen(process.env.PORT || 80)
