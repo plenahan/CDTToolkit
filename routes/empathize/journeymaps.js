@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 // const JourneyMap = require('../../models/empathize/journeymap')
 const JourneyMap = require('../../models/thing')
+const {ensureAuth, ensureGuest } = require('../../middleware/auth')
 const Note = require('../../models/note')
 const tool = {
     title: "Journey Map",
@@ -12,7 +13,7 @@ const tool = {
     creationType: "JourneyMap"
 }
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuth, async (req, res) => {
     let query = JourneyMap.find({ creationType: tool.creationType, user: req.user })
     // const sortby = new SortBy({ title: req.query.SortBy })
     if (req.query.name != null && req.query.name != '') {
@@ -45,7 +46,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/new', async (req, res) => {
+router.get('/new', ensureAuth, async (req, res) => {
     res.render('partials/formPage', { 
         creations: req.Creations, 
         tool: tool,
@@ -53,7 +54,7 @@ router.get('/new', async (req, res) => {
     })
 })
 
-router.post('/', async (req, res) => {
+router.post('/', ensureAuth, async (req, res) => {
     const journeymap = new JourneyMap({
         name: req.body.name,
         description: req.body.description,
@@ -72,7 +73,7 @@ router.post('/', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', ensureAuth, async (req, res) => {
     const journeymap = await JourneyMap.findById(req.params.id).populate('user').exec()
     const comments = await Note.find({connectedObject: journeymap }).populate('user').exec()
     res.render('partials/showPage', {creations: req.Creations, creation: journeymap, 
@@ -80,7 +81,7 @@ router.get('/:id', async (req, res) => {
     })
 })
 
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', ensureAuth, async (req, res) => {
     try {
         const journeymap = await JourneyMap.findById(req.params.id)
         res.render('partials/editPage', { 
@@ -92,7 +93,7 @@ router.get('/:id/edit', async (req, res) => {
     }
 })
 
-router.post('/:id/comments', async (req, res) => {
+router.post('/:id/comments', ensureAuth, async (req, res) => {
     const journeymap = await JourneyMap.findById(req.params.id)
     const note = new Note({
         title: req.body.title,
@@ -109,7 +110,7 @@ router.post('/:id/comments', async (req, res) => {
     }
 })
 
-router.delete('/:id/comments/:commentId', async (req, res) => {
+router.delete('/:id/comments/:commentId', ensureAuth, async (req, res) => {
     let object
     let note
     try {
@@ -127,7 +128,7 @@ router.delete('/:id/comments/:commentId', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', ensureAuth, async (req, res) => {
     let journeymap
     try {
         journeymap = await JourneyMap.findById(req.params.id)
@@ -143,7 +144,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', ensureAuth, async (req, res) => {
     let journeymap
     try {
         journeymap = await JourneyMap.findById(req.params.id)

@@ -255,15 +255,15 @@
                     <div class="collapse" id="account-collapse">
                       <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                         <li><a href="/projects" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Projects</a></li>
-                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
-                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
-                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign out</a></li>
+                        <li><a href="/account/dashboard" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Profile</a></li>
+                        <!-- <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Settings</a></li>
+                        <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Sign out</a></li> -->
                       </ul>
                     </div>
                   </li>
                   
                 </ul>
-                <a href="/notes"><h6>Notes:</h6></a>
+                <a style="text-decoration: none; color: black;" href="/notes"><h6>Notes:</h6></a>
                 <ul>
                   <% if(creations.notes){ creations.notes.forEach(note => { %>
                     <div style="display: flex;">
@@ -275,8 +275,10 @@
                   <% })} %>
                   </ul>
                 <form action="/notes/general/new" method="POST">
-                  <textarea name="description" id="" cols="20" rows="2"></textarea>
-                  <button class="btn btn-primary" type="submit">Create</button>
+                  <div style="margin-right: 5px;" class="form-item">
+                  <textarea name="description" id="description"></textarea>
+                </div>
+                  <button class="btn btn-primary" type="submit">Create Note</button>
                 </form>
                 
               </div>

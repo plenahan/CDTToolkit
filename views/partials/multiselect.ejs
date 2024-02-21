@@ -12,4 +12,15 @@
       this.scrollTop = originalScrollTop;
     }, 0);
   });
+
+  
 </script>
+<% function contains(obj, list){ %>
+  <%  var i; %>
+  <%  for (i = 0; i < list.length; i++) { %>
+    <%   if (list[i] === obj) { %>
+      <%     return true; %>
+      <%   } %>
+      <%  } %>
+      <% return false; %>
+      <% } %>

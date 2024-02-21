@@ -2,11 +2,6 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-/**
- * Client id = 
- * Client Secret = 
- */
-
 const express = require('express')
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
@@ -60,6 +55,8 @@ const Thing = require('./models/thing')
 const Note = require('./models/note')
 const User = require('./models/user')
 
+// const {ensureAuth, ensureGuest } = require('./middleware/auth')
+
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
 app.set('layout', 'layouts/layout')
@@ -99,7 +96,6 @@ app.use('*', async (req, res, next) => {
 })
 
 const mongoose = require('mongoose')
-const { ensureAuth } = require('./middleware/auth')
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
@@ -129,4 +125,4 @@ app.use('/notes', notesRouter)
 app.use('/auth', authRouter)
 app.use('/account', accountRouter)
 
-app.listen(process.env.PORT || 80)
+app.listen(process.env.PORT || 3000)

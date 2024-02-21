@@ -3,6 +3,8 @@ const router = express.Router()
 const Project = require('../models/project')
 const Thing = require('../models/thing')
 const Note = require('../models/note')
+const User = require('../models/user')
+const {ensureAuth, ensureGuest } = require('../middleware/auth')
 const tool = {
     title: "Project",
     description: "Group your creations together in projects",
@@ -12,7 +14,7 @@ const tool = {
     creationType: "Project"
 }
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuth, async (req, res) => {
     let query = Project.find({ users: req.user.id })
     // const sortby = new SortBy({ name: req.query.SortBy })
     if (req.query.name != null && req.query.name != '') {
@@ -47,19 +49,28 @@ router.get('/', async (req, res) => {
 
 router.get('/new', async (req, res) => {
     const things = await Thing.find({ })
+    const users = await User.find({ })
     res.render('partials/formPage', { 
         creations: req.Creations, 
         tool: tool,
         object: new Project(),
-        things: things
+        things: things,
+        users: users,
+        account: req.user
     })
 })
 
 router.post('/', async(req, res) => {
+    // let projectUsers = []
+    // projectUsers.push(req.user)
+    // req.body.users.forEach(user => {
+    //     projectUsers.push(User.find({ email: user }))
+    // })
+
     const project = new Project({
         name: req.body.name,
         children: req.body.children,
-        users: [req.user]
+        users: req.body.users
     })
     try {
         const newProject = await project.save()
@@ -83,7 +94,8 @@ router.get('/:id', async (req, res) => {
     let tests = [];
 
 
-    let query = await Project.findById(req.params.id).populate("children").exec()
+    let query = await Project.findById(req.params.id).populate('users').populate("children").exec()
+    let users = await User.find({ })
     // let project = await Project.findById(req.params.id)
     query.children.forEach(child => {
         switch(child.creationType){
@@ -136,7 +148,8 @@ router.get('/:id', async (req, res) => {
             creation: query,
             object: query,
             things: await Thing.find({}),
-            reflections: reflections
+            reflections: reflections,
+            users: users
          })
     } catch (err) {
         console.log(err)
@@ -146,13 +159,16 @@ router.get('/:id', async (req, res) => {
 
 router.get('/:id/edit', async (req, res) => {
     try {
-        const project = await Project.findById(req.params.id).populate('children').exec()
+        const project = await Project.findById(req.params.id).populate('children').populate('users').exec()
         const things = await Thing.find({ })
+        const users = await User.find({ })
         res.render('partials/editPage', { 
             creations: req.Creations, 
             tool: tool,
             object: project,
-            things: things })
+            things: things,
+            users: users,
+            account: req.user })
     } catch {
         res.redirect('/projects')
     }
@@ -165,6 +181,7 @@ router.put('/:id', async (req, res) => {
         project.name = req.body.name
         project.children = req.body.children
         project.reflection = req.body.reflection
+        project.users = req.body.users
         await project.save()
         res.redirect(`/projects/${project.id}`)
     } catch {
@@ -490,7 +507,7 @@ router.get('/:id/tests', async (req, res) => {
 
 router.get('/:id/creation/:creationId', async (req, res) => {
     let query = await Project.findById(req.params.id).populate("children").exec()
-    let creation = await Thing.findById(req.params.creationId)
+    let creation = await Thing.findById(req.params.creationId).populate('user')
     let link
     let folder
     let stage
@@ -546,7 +563,7 @@ router.get('/:id/creation/:creationId', async (req, res) => {
             stage = "test"
             break;
     }
-    let comments = await Note.find({ connectedObject: creation})
+    let comments = await Note.find({ connectedObject: creation}).populate('user')
     res.render('project/showtoolpage', { creations: req.Creations,
         tool: {stage: stage, folder: folder, link: link},
         showProject: query,

@@ -2,7 +2,9 @@
       <h1><%= showProject.name %></h1>
       <p class="lead"><%= showProject.description %></p>
     <%- include('../../partials/buttons', { link: tool.link, creation: showProject }) %>
- 
+    <% showProject.users.forEach(user => { %>
+      <%= user.email %>
+    <% }) %>
     <hr class="my-5">
     
     
@@ -135,7 +137,7 @@
 </div>
   <% if((personas.length + empathyMaps.length + journeyMaps.length) % 5 == 0 && showProject.reflection == 'false' && personas.length + empathyMaps.length + journeyMaps.length > 0) { %>
         <form id="form2" action="/projects/<%= showProject.id %>?_method=PUT" method="POST">
-          <div>
+          <div style="display: none;">
           <%- include('./_form_fields') %>
           <input style="display: none;" name="reflection" value="true" type="text">
         </div>

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Note = require('../models/note')
+const {ensureAuth, ensureGuest } = require('../middleware/auth')
 const tool = {
     title: "Note",
     description: "Jot down any thoughts you have",
@@ -10,7 +11,7 @@ const tool = {
     creationType: "Note"
 }
 
-router.get('/', async (req, res) => {
+router.get('/', ensureAuth, async (req, res) => {
     let query = Note.find({ user: req.user })
     // const sortby = new SortBy({ name: req.query.SortBy })
     if (req.query.name != null && req.query.name != '') {
@@ -43,7 +44,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/new', async (req, res) => {
+router.get('/new', ensureAuth, async (req, res) => {
     res.render('partials/formPage', { 
         creations: req.Creations, 
         tool: tool,
@@ -51,7 +52,7 @@ router.get('/new', async (req, res) => {
     })
 })
 
-router.post('/new', async (req, res) => {
+router.post('/new', ensureAuth, async (req, res) => {
     const note = new Note({
         description: req.body.description,
         stage: req.body.stage,
@@ -67,7 +68,7 @@ router.post('/new', async (req, res) => {
     }
 })
 
-router.post('/general/new', async (req, res) => {
+router.post('/general/new', ensureAuth, async (req, res) => {
     const note = new Note({
         description: req.body.description,
         stage: 'general',
@@ -82,7 +83,7 @@ router.post('/general/new', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', ensureAuth, async (req, res) => {
     const note = await Note.findById(req.params.id).populate('user')
     const comments = await Note.find({connectedObject: note }).populate('user')
     res.render('partials/showPage', {creations: req.Creations, creation: note, 
@@ -90,7 +91,7 @@ router.get('/:id', async (req, res) => {
     })
 })
 
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', ensureAuth, async (req, res) => {
     try {
         const note = await Note.findById(req.params.id)
         res.render('partials/editPage', { 
@@ -102,7 +103,7 @@ router.get('/:id/edit', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', ensureAuth, async (req, res) => {
     let note
     try {
         note = await Note.findById(req.params.id)
@@ -115,7 +116,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', ensureAuth, async (req, res) => {
     let note
     try {
         note = await Note.findById(req.params.id)
