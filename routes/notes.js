@@ -86,9 +86,14 @@ router.post('/general/new', ensureAuth, async (req, res) => {
 router.get('/:id', ensureAuth, async (req, res) => {
     const note = await Note.findById(req.params.id).populate('user')
     const comments = await Note.find({connectedObject: note }).populate('user')
-    res.render('partials/showPage', {creations: req.Creations, creation: note, 
-        tool: tool, comments: comments, note: new Note()
-    })
+    if(note == null){
+        res.redirect('/notes')
+    }
+    else {
+        res.render('partials/showPage', {creations: req.Creations, creation: note, 
+            tool: tool, comments: comments, note: new Note()
+        })
+    }
 })
 
 router.get('/:id/edit', ensureAuth, async (req, res) => {
@@ -121,7 +126,7 @@ router.delete('/:id', ensureAuth, async (req, res) => {
     try {
         note = await Note.findById(req.params.id)
         await note.deleteOne()
-        res.redirect('/notes')
+        res.redirect('back')
     } 
     catch {
         if (note == null) {
