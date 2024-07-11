@@ -1,7 +1,21 @@
 <div>
     <h1>New <%= tool.title %></h1>
     <p class="lead"><%= tool.description %></p>
-    <form action="/<%= tool.link %>" method="POST">
+    <form action="/<%= tool.link %>" method="POST" enctype="multipart/form-data">
+        <h3>Upload PDF:</h3>
+        <div class="form-row">
+            <div class="form-item">
+                <input name="file" id="file" type="file"/>
+            </div>
+        </div>
+        <div class="btn-row">
+            <a class="btn btn-primary" href="/<%= tool.link %>">Cancel</a>
+            <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+    </form>
+        <hr class="my-5">
+        <form action="/<%= tool.link %>" method="POST">
+        <h3>Create Your Own:</h3>
         <div><%- include(`../${tool.stage}/${tool.folder}/_form_fields`, { object }) %></div>
         <div class="btn-row">
             <a class="btn btn-primary" href="/<%= tool.link %>">Cancel</a>

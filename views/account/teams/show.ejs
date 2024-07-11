@@ -1,11 +1,11 @@
-<h2 class="page-header-big"><%= team.title %></h2>
+<h2 class="page-header-big"><%= team.name %></h2>
 <h2 class="page-header">Info:</h2>
 <div class="image-details">
   <div class="image-details-grid">
-    <div class="image-details-label">Users:</div>
-    <div><% users.forEach(user => { %> <%= user.email %> | <% }) %></div>
+    <div class="image-details-label">Members:</div>
+    <div><% users.forEach(user => { %> <%= user.displayName %> | <% }) %></div>
     <div class="image-details-label">Creator:</div>
-    <div><%= team.creator.email %></div>
+    <div><%= team.creator.displayName %></div>
   </div>
 </div>
 <% if (user == team.creator.id) { %>
@@ -15,27 +15,24 @@
   %>
 </div>
 <% } %>
-<h2 class="page-header">Empathize:</h2>
-<h2 class="page-header-smaller">Empathy Notes:</h2>
-<% notes.forEach(empathizeNote => { %>
-<div class="index-title-row">
-  <div class="index-title"><%= empathizeNote.title %></div>
-  <div class="btn-row">
-    <a class="btn btn-primary" href="/empathizenotes/<%= empathizeNote.id %>"
-      >View</a
-    >
-    <% if(empathizeNote.user.id == user) { %>
-    <a
-      class="btn btn-primary"
-      href="/empathizenotes/<%= empathizeNote.id %>/edit"
-      >Edit</a
-    >
-    <%- include('../../partials/deleteForm', { url:
-    `/empathizenotes/${empathizeNote.id}` }) %> <% } %>
+<h2 class="page-header">Projects:</h2>
+<div class="row" data-masonry='{"percentPosition": true }'>
+  <% objects.forEach(creation => { %>
+  
+<div class="col-sm-6 col-lg-4 mb-4">
+  <a href="/<%= tool.link %>/<%= creation.project._id %>">
+  <div class="card text-bg-primary text-center p-3">
+    <figure class="mb-0">
+      <blockquote class="blockquote">
+        <p><%= creation.project.name %></p>
+      </blockquote>
+      <figcaption class="blockquote-footer mb-0 text-white">
+        <%= creation.description %>
+      </figcaption>
+    </figure>
   </div>
+</a>
 </div>
 <% }) %>
-<h2 class="page-header">Define:</h2>
-<h2 class="page-header">Ideate:</h2>
-<h2 class="page-header">Prototype:</h2>
-<h2 class="page-header">Test:</h2>
+</div>
+<h2 class="page-header">Reflections:</h2>

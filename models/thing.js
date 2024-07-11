@@ -20,27 +20,33 @@ const thingSchema = new mongoose.Schema({
     size: {
         type: Number
     },
-    statement: {
+    statementDo: {
         type: String
     },
-    feel: {
+    statementUser: {
         type: String
     },
-    see: {
-        type: String
-    }, 
-    do: {
+    statementInsight: {
         type: String
     },
-    hear: {
+    feel: [{
         type: String
-    },
-    pain: {
+    }],
+    see: [{
         type: String
-    },
-    gain: {
+    }], 
+    do: [{
         type: String
-    },
+    }],
+    hear: [{
+        type: String
+    }],
+    pain: [{
+        type: String
+    }],
+    gain: [{
+        type: String
+    }],
     who: {
         type: String
     },
@@ -50,10 +56,53 @@ const thingSchema = new mongoose.Schema({
     how: {
         type: String
     },
+    type: {
+        type: String,
+        default: "basic"
+    },
+    demographic: {
+        type: String
+    },
+    interests: [{
+        type: String
+    }],
+    motivations: [{
+        type: String
+    }],
+    emotions: [{
+        type: String
+    }],
+    values: [{
+        type: String
+    }],
+    lines: [{
+        type: String
+    }],
+    textareas: [{
+        type: String
+    }],
+    lines_labels: [{
+        type: String
+    }],
+    textareas_labels: [{
+        type: String
+    }],
     ideas: [{
         type: String
     }],
+    chart: {
+        type: JSON
+    },
     data: {
+        type: String
+    },
+    construct: {
+        type: String
+    },
+    annotations: {
+        type: String
+    },
+    tree: {
         type: String
     },
     metric: {
@@ -76,6 +125,10 @@ const thingSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    pdf: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'PDF'
+    }
 })
 
 thingSchema.virtual('coverImagePath').get(function(){

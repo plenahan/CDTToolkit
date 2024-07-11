@@ -47,7 +47,7 @@ router.get('/', ensureAuth, async (req, res) => {
 })
 
 router.get('/new', ensureAuth, async (req, res) => {
-    res.render('partials/formPage', { 
+    res.render('empathize/persona/formPage', { 
         creations: req.Creations, 
         tool: tool,
         object: new Persona()
@@ -57,14 +57,23 @@ router.get('/new', ensureAuth, async (req, res) => {
 router.post('/', ensureAuth, async (req, res) => {
     const persona = new Persona({
         name: req.body.name,
-        priority: req.body.priority,
         description: req.body.description,
         who: req.body.who,
         what: req.body.what,
         how: req.body.how,
+        demographic: req.body.demographic,
+        interests: req.body.interest,
+        motivations: req.body.motivation,
+        emotions: req.body.emotion,
+        values: req.body.value,
+        lines: req.body.line,
+        textareas: req.body.textarea,
+        lines_labels: req.body.line_label,
+        textareas_labels: req.body.textarea_label,
         creationType: tool.creationType,
         link: tool.link,
-        user: req.user
+        user: req.user,
+        type: req.body.type
     })
     if (req.body.cover != null && req.body.cover !== '') {
         saveCover(persona, req.body.cover)
@@ -72,7 +81,8 @@ router.post('/', ensureAuth, async (req, res) => {
     try {
         const newPersona = await persona.save()
         res.redirect(`/personas/${newPersona.id}`)
-    } catch {
+    } catch (err) {
+        console.log(err)
         res.redirect('/')
     }
 })
@@ -88,7 +98,7 @@ router.get('/:id', ensureAuth, async (req, res) => {
 router.get('/:id/edit', ensureAuth, async (req, res) => {
     try {
         const persona = await Persona.findById(req.params.id)
-        res.render('partials/editPage', { 
+        res.render('empathize/persona/editPage', { 
             creations: req.Creations, 
             tool: tool,
             object: persona })
@@ -141,6 +151,15 @@ router.put('/:id', ensureAuth, async (req, res) => {
         persona.who = req.body.who
         persona.what = req.body.what
         persona.how = req.body.how
+        persona.demographic = req.body.demographic
+        persona.interests = req.body.interest
+        persona.motivations = req.body.motivation
+        persona.emotions = req.body.emotion
+        persona.values = req.body.value
+        persona.lines = req.body.line
+        persona.textareas = req.body.textarea
+        persona.lines_labels = req.body.line_label
+        persona.textareas_labels = req.body.textarea_label
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(persona, req.body.cover)
         }

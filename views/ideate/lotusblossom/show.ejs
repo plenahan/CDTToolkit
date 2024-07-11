@@ -1,13 +1,97 @@
-<div class="image-details-grid">
-            <div class="image-details-label">Description:</div>
-            <div><%= creation.description %></div>
-            <!-- <div class="image-details-label">Affiliation:</div>
-            <div><= persona.status %></div> -->
-            <div class="image-details-label">Created:</div>
-            <div><%= creation.createdAt.toDateString() %></div>
-            <!-- <div class="image-details-label">Created By:</div>
-            <div><= persona.user.email %></div> -->
-            <div class="image-details-label">User:</div>
-            <div><%= creation.user.email %></div>
-            <br>
-        </div>
+<canvas height="200px" id="myChart"></canvas>
+<div class="form-row">
+    <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+        <div class="image-details-label">Created: <%= creation.createdAt.toDateString() %></div>
+    </div>
+    <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+        <div class="image-details-label">User: <%= creation.user.email %></div>
+    </div>
+</div>
+        
+        <div style="display: none;" id="mydiv"><%= creation.chart %></div>
+        <div style="display: none;" id="construct"><%= creation.construct %></div>
+        <div style="display: none;" id="annotations"><%= creation.annotations %></div>
+        <script>
+            var data = JSON.parse(document.getElementById('mydiv').innerText);
+            var construct = document.getElementById('construct').innerText;
+            var annotations = JSON.parse(document.getElementById('annotations').innerText);
+
+            let element;
+    let lastEvent;
+
+    function drag(moveX, moveY) {
+    element.x += moveX;
+    element.y += moveY;
+    element.x2 += moveX;
+    element.y2 += moveY;
+    element.centerX += moveX;
+    element.centerY += moveY;
+    if (element.elements && element.elements.length) {
+        for (const subEl of element.elements) {
+        subEl.x += moveX;
+        subEl.y += moveY;
+        subEl.x2 += moveX;
+        subEl.y2 += moveY;
+        subEl.centerX += moveX;
+        subEl.centerY += moveY;
+        subEl.bX += moveX;
+        subEl.bY += moveY;
+        }
+    }
+    };
+    let ctx = document.getElementById('myChart');
+    let chart1 = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            events: ['mousedown', 'mouseup', 'mousemove', 'mouseout'],
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    display: false
+                },
+                annotation: {
+                    enter(ctx) {
+                    element = ctx.element;
+                    },
+                    leave() {
+                    element = undefined;
+                    lastEvent = undefined;
+                    },
+                    annotations
+                },
+                tooltip: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: false,
+                        text: "Enter Construct"
+                    },
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false
+                    },
+                    beginAtZero: true,
+                    display: true,
+                    min: 0,
+                    max: 100
+                },
+                x: {
+                    position: 'top',
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false 
+                    }
+                }
+            }
+        }   
+        });
+        </script>
+        

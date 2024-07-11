@@ -1,0 +1,18 @@
+<div class="container py-4">
+    <div style="display: flex;" class="p-5 mb-4 bg-body-tertiary rounded-3">
+      <div class="container-fluid py-1">
+        <h1 class="display-5 fw-bold"><%= creation.name %></h1>
+        <p class="col-md-12 fs-4"><%= creation.description %></p>
+        <!-- <button class="btn btn-primary btn-lg" type="button">Example button</button> -->
+      </div>
+      <div style="justify-content: center;">
+      <img style="max-width: 400px; border-radius: 10px; box-shadow: 10px 5px 5px lightgray; max-height: 400px; justify-content: center;" src="<%= creation.coverImagePath %>">
+    </div>
+    </div>
+</div>
+<style>
+    .pdfobject-container { height: 500px; border: 1px solid #ccc; }
+    </style>
+    <div id="my-pdf"></div>
+    <script src="https://unpkg.com/pdfobject"></script>
+    <script>PDFObject.embed("/<%= path %>", "#my-pdf");</script>

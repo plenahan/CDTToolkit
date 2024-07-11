@@ -9,8 +9,11 @@
     <script defer src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
     <script defer src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
     <script defer src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-pdf-preview/dist/filepond-plugin-pdf-preview.min.js"></script>
     <script defer src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
-    <script defer src="/javascripts/fileUpload.js"></script>
+    <script defer src="/public/javascripts/fileUpload.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation/dist/chartjs-plugin-annotation.min.js"></script>
     <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbars/">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"> -->
@@ -20,8 +23,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-    <link id="main-css" rel="stylesheet" href="/stylesheets/main.css">
-    <link href="stylesheets/main.css" rel="stylesheet">
+    <link id="main-css" rel="stylesheet" href="/public/stylesheets/main.css">
+    <!-- <link href="stylesheets/main.css" rel="stylesheet"> -->
     
     <style>
         .bd-placeholder-img {
@@ -109,18 +112,37 @@
         function drag(ev) {
           ev.dataTransfer.setData("text", ev.target.id);
         }
+        function draginput(ev){
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
         
-        function drop(ev) {
+        function drop(ev, target) {
           ev.preventDefault();
           var data = ev.dataTransfer.getData("text");
+          // console.log(data)
           var option = document.createElement("option");
           option.text = document.getElementById(data).innerText;
           option.value = data;
           option.selected = true;
-          var select = document.getElementById("children");
+          var select = document.getElementById(target);
           select.appendChild(option);
           // ev.target.appendChild(document.getElementById(data));
           document.getElementById(data).draggable = false;
+          // console.log(document.getElementById(data))
+        }
+
+        function dropinput(ev, target) {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text");
+          console.log(data)
+          var option = document.createElement("option");
+          option.text = document.getElementById(data).innerText;
+          option.value = document.getElementById(data).innerText;;
+          option.selected = true;
+          var select = document.getElementById(target);
+          select.appendChild(option);
+          // ev.target.appendChild(document.getElementById(data));
+          // document.getElementById(data).draggable = false;
           // console.log(document.getElementById(data))
         }
 
@@ -135,7 +157,9 @@
         <%- include("../partials/sidebar.ejs") %>
           <div class="container">
               <%- body %>
+              
           </div>
-    <%- include("../partials/footer") %>
+          <!-- <%- include("../partials/footer") %> -->
 </body>
+
 </html>

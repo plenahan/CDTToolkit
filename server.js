@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express')
 const app = express()
+const path = require('path')
 const expressLayouts = require('express-ejs-layouts')
 const methodOverride = require('method-override')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
@@ -11,6 +12,8 @@ const passport = require('passport')
 require('./config/passport')(passport)
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
+const fs = require('fs')
+const mongodb = require('mongodb')
 
 const indexRouter = require('./routes/index')
 const learnRouter = require('./routes/learn')
@@ -54,6 +57,7 @@ const SortBy = require('./models/sortby')
 const Thing = require('./models/thing')
 const Note = require('./models/note')
 const User = require('./models/user')
+const File = require('./models/pdf')
 
 // const {ensureAuth, ensureGuest } = require('./middleware/auth')
 
@@ -63,7 +67,7 @@ app.set('layout', 'layouts/layout')
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }))
 app.use(expressLayouts)
 app.use(methodOverride('_method'))
-app.use(express.static('public'))
+app.use('/public', express.static('public'))
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -73,6 +77,17 @@ app.use(session({
 app.use(passport.initialize()) 
 app.use(passport.session())
 
+const mongoose = require('mongoose')
+const Grid = require('gridfs-stream')
+const multer = require("multer")
+const req = require('express/lib/request')
+const { Readable } = require("stream");
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', error => console.error(error))
+db.once('open', () => {
+    console.log('Connected to Mongoose')
+})
 
 app.use('*', async (req, res, next) => {
     req.Creations = new Creation({
@@ -95,11 +110,25 @@ app.use('*', async (req, res, next) => {
     next()
 })
 
-const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
-const db = mongoose.connection
-db.on('error', error => console.error(error))
-db.once('open', () => console.log('Connected to Mongoose'))
+const upload = multer({ dest: 'uploads' })
+
+app.post('/upload', upload.single("file"), async (req, res) => {
+    try {
+        const fileData = {
+            path: req.file.path,
+            originalName: req.file.originalname
+        }
+        const file = await File.create(fileData)
+        console.log(file)
+        res.redirect('/')
+    }
+    catch(err) {
+        console.log(err)
+        res.redirect('/')
+    }
+})
+
+
 
 app.use('/', indexRouter)
 app.use('/learn', learnRouter)
@@ -125,4 +154,4 @@ app.use('/notes', notesRouter)
 app.use('/auth', authRouter)
 app.use('/account', accountRouter)
 
-app.listen(process.env.PORT || 80)
+app.listen(process.env.PORT || 3000)

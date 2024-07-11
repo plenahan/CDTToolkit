@@ -3,45 +3,131 @@
         <label>Name*</label>
         <input type="text" name="name" value="<%= object.name %>">
     </div>
+    <div class="form-item" style="align-items: center;">
+        <!-- <label>Cover</label> -->
+        <input type="file" name="cover" class="image-cover filepond" >
+    </div>
     <div class="form-item">
         <label>Description</label>
         <textarea name="description"><%= object.description %></textarea>
     </div>
-    <div class="form-item form-item-no-grow">
+    <!-- <div class="form-item form-item-no-grow">
         <label>Cover</label>
         <input type="file" name="cover" class="image-cover filepond">
-    </div>
+    </div> -->
+</div>
+  <div class="form-row">
+  <div class="form-item" id="div1" ondrop="dropinput(event, 'feel')" ondragover="allowDrop(event)" style=" height: 300px;border-radius: 2rem;">
+    <label>See/Hear (Drag & Drop)</label>
+    <select style="background-color: lightsalmon;border-radius: 2rem;" name="feel" id="feel" multiple>
+      <% object.feel.forEach(thing => { %>
+        <option selected label="<%= thing %>" value="<%= thing %>">
+    <% }) %>
+  </select>
+  <%- include('../../partials/multiselect.ejs', { id: 'feel' }) %>
+  </div>
+  <div class="form-item" id="div1" ondrop="dropinput(event, 'hear')" ondragover="allowDrop(event)" style=" height: 300px;border-radius: 2rem;">
+    <label>Do (Drag & Drop)</label>
+    <select style="background-color: lightseagreen;border-radius: 2rem;" name="hear" id="hear" multiple>
+        <% object.hear.forEach(thing => { %>
+          <option selected label="<%= thing %>" value="<%= thing %>">
+      <% }) %>
+    </select>
+    <%- include('../../partials/multiselect.ejs', { id: 'hear' }) %>
+</div>
 </div>
 <div class="form-row">
+    <!-- <div class="form-item"> -->
+    <!-- </div> -->
+    <div class="form-item"id="div1" ondrop="dropinput(event, 'see')" ondragover="allowDrop(event)" style=" height: 300px; border-radius: 2rem;">
+        <label>Say (Drag & Drop)</label>
+        <select style="background-color: lightskyblue;border-radius: 2rem;" name="see" id="see" multiple>
+            <% object.see.forEach(thing => { %>
+              <option style="background-color: rgb(255, 255, 0);" selected label="<%= thing %>" value="<%= thing %>">
+          <% }) %>
+        </select>
+        <%- include('../../partials/multiselect.ejs', { id: 'see' }) %>
+    </div>
+        <div class="form-item" id="div1" ondrop="dropinput(event, 'do')" ondragover="allowDrop(event)" style=" height: 300px;border-radius: 2rem;">
+            <label>Think/Feel (Drag & Drop)</label>
+          <!-- <label>Feel</label> -->
+          <select style="background-color: lightgoldenrodyellow;border-radius: 2rem;" name="do" id="do" multiple>
+            <% object.do.forEach(thing => { %>
+              <option selected label="<%= thing %>" value="<%= thing %>">
+          <% }) %>
+        </select>
+        <%- include('../../partials/multiselect.ejs', { id: 'do' }) %>
+        </div>
+</div>
+
+
+  <div id="inputs" draggable="true" ondragstart="draginput(event)">
+
+  </div>
+  <script>
+    function makeWord(){
+        var option = document.createElement("option");
+        var area = document.getElementById("inputs");
+        area.innerHTML = (document.getElementById("newinput").value);
+        var selectField = document.getElementById("fieldInput").value;
+        var field = document.getElementById(selectField);
+        option.text = document.getElementById("newinput").value;
+        option.value = document.getElementById("newinput").value;
+        option.selected = true;
+        field.appendChild(option);
+        // area.value = (document.getElementById("newinput").value);
+    }
+  </script>
+  
+  <div class="form-row">
+    <div class="form-item">
+        <label>Input</label>
+        <input id="newinput" type="text">
+    </div>
+    <div class="form-item">
+        <label>Field Select</label>
+        <select name="fieldInput" id="fieldInput">
+            <option value="">Drag & Drop</option>
+            <option value="feel">See/Hear</option>
+            <option value="hear">Do</option>
+            <option value="see">Say</option>
+            <option value="do">Think/Feel</option>
+        </select>
+    </div>
+</div>
+<button type="button" class="btn btn-secondary" onclick="makeWord()">Add</button>
+<br>
+<br>
+<!-- <div class="form-row">
     <div class="form-item">
         <label>Feel:</label>
-        <textarea rows="5" name="feel"><%= object.feel %></textarea>
+        <textarea rows="5" name="feel"><= object.feel %></textarea>
     </div>
     <div class="form-item">
         <label>See:</label>
-        <textarea rows="5" name="see"><%= object.see %></textarea>
+        <textarea rows="5" name="see"><= object.see %></textarea>
     </div>
 </div>
 <div class="form-row">
     <div class="form-item">
         <label>Do:</label>
-        <textarea rows="5" name="do"><%= object.do %></textarea>
+        <textarea rows="5" name="do"><= object.do %></textarea>
     </div>
     <div class="form-item">
         <label>Hear:</label>
-        <textarea rows="5" name="hear"><%= object.hear %></textarea>
+        <textarea rows="5" name="hear"><= object.hear %></textarea>
     </div>
 </div>
 <div class="form-row">
     <div class="form-item">
         <label>Pain:</label>
-        <textarea rows="5" name="pain"><%= object.pain %></textarea>
+        <textarea rows="5" name="pain"><= object.pain %></textarea>
     </div>
     <div class="form-item">
         <label>Gain:</label>
-        <textarea rows="5" name="gain"><%= object.gain %></textarea>
+        <textarea rows="5" name="gain"><= object.gain %></textarea>
     </div>
-</div>
+</div> -->
 
 <!-- <div class="form-row">
     <div class="form-item form-item-no-grow">

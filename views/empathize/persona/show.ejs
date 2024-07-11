@@ -1,19 +1,121 @@
-<div class="image-details-grid">
-            <div class="image-details-label">Description:</div>
+<% if(creation.type == "basic"){ %>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <!-- <div class="image-details-label">Description:</div> -->
             <div><%= creation.description %></div>
-            <div class="image-details-label">Who They Want To Be:</div>
-            <div><%= creation.who %></div>
-            <div class="image-details-label">What they want to do:</div>
-            <div><%= creation.what %></div>
-            <div class="image-details-label">How they want to feel:</div>
-            <div><%= creation.how %></div>
-            <!-- <div class="image-details-label">Affiliation:</div>
-            <div><= persona.status %></div> -->
-            <div class="image-details-label">Created:</div>
-            <div><%= creation.createdAt.toDateString() %></div>
-            <div class="image-details-label">User:</div>
-            <div><%= creation.user.email %></div>
-            <!-- <div class="image-details-label">Created By:</div>
-            <div><= persona.user.email %></div> -->
-            <br>
         </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: azure;">
+            <div style="align-self: center;" class="image-details-label">Who They Want To Be:</div>
+            <div><%= creation.who %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: azure;">
+            <div style="align-self: center;" class="image-details-label">What they want to do:</div>
+            <div><%= creation.what %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: azure;">
+            <div style="align-self: center;" class="image-details-label">How they want to feel:</div>
+            <div><%= creation.how %></div>
+        </div>
+    </div>
+<!-- <div class="image-details-grid"> -->
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">Created: <%= creation.createdAt.toDateString() %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">User: <%= creation.user.email %></div>
+        </div>
+    </div>
+    <!-- <div class="image-details-label">Created By:</div>
+    <div><= creation.user.email %></div> -->
+    <br>
+<!-- </div> -->
+<% } %>
+<% if(creation.type == "simple"){ %>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <!-- <div class="image-details-label">Description:</div> -->
+            <div><%= creation.description %></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <div style="text-align: center;">Hobbies & Interests:</div>
+            <% creation.interests.forEach(interest => { %>
+                <div style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure; text-align: center;"><%= interest %></div>
+            <% }) %>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <div style="text-align: center;">Roles & Functions:</div>
+            <% creation.motivations.forEach(motivation => { %>
+                <div style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure; text-align: center;"><%= motivation %></div>
+            <% }) %>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <div style="text-align: center;">Personalities & Emotions:</div>
+            <% creation.emotions.forEach(emotion => { %>
+                <div style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure; text-align: center;"><%= emotion %></div>
+            <% }) %>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <div style="text-align: center;">Values & Goals:</div>
+            <% creation.values.forEach(value => { %>
+                <div style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure; text-align: center;"><%= value %></div>
+            <% }) %>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">Background & Demographic: <%= creation.demographic %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">Created: <%= creation.createdAt.toDateString() %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">User: <%= creation.user.email %></div>
+        </div>
+    </div>
+<% } %>
+<% if(creation.type == "custom"){ %>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <!-- <div class="image-details-label">Description:</div> -->
+            <div><%= creation.description %></div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <% if(creation.lines_labels.length > 0) { %>
+                <% var i = 0 %>
+                <% creation.lines.forEach(line => { %>
+                    <div class="form-row">
+                        <div class="form-item" style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure; text-align: center;"><strong><%= creation.lines_labels[i] %>:</strong> <%= line %></div>
+                    </div>
+                <% i++ }) %>
+                <br>
+                <% } %>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;" class="image-details-label">
+            <% if(creation.textareas_labels.length > 0) { %>
+                <% var i = 0 %>
+                <% creation.textareas.forEach(textarea => { %>
+                    <div class="form-row">
+                        <div class="form-item" style="border: 2px solid whitesmoke; padding: 15px; border-radius: 2rem; background-color: azure;"><strong><%= creation.textareas_labels[i] %>:</strong> <%= textarea %></div>
+                    </div>
+                <% i++ }) %>
+                <br>
+                <% } %>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">Created: <%= creation.createdAt.toDateString() %></div>
+        </div>
+        <div class="form-item" style="border: 2px solid white; padding: 20px; border-radius: 2rem; background-color: whitesmoke;">
+            <div class="image-details-label">User: <%= creation.user.email %></div>
+        </div>
+    </div>
+    
+<% } %>

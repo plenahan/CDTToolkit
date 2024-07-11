@@ -55,9 +55,12 @@ router.get('/new', ensureAuth, async (req, res) => {
 
 router.post('/', ensureAuth, async (req, res) => {
     const statement = new Statement({
-        name: req.body.name,
-        description: req.body.description,
-        statement: req.body.statement,
+        // name: req.body.name,
+        // description: req.body.description,
+        statementDo: req.body.statementDo,
+        statementUser: req.body.statementUser,
+        statementInsight: req.body.statementInsight,
+        name: req.body.statementUser + " needs (a way) to " + req.body.statementDo + " because " + req.body.statementInsight + ".",
         creationType: tool.creationType,
         link: tool.link,
         user: req.user
@@ -132,9 +135,13 @@ router.put('/:id', ensureAuth, async (req, res) => {
     let statement
     try {
         statement = await Statement.findById(req.params.id)
-        statement.name = req.body.name
-        statement.description = req.body.description
-        statement.statement = req.body.statement
+        // statement.name = req.body.name
+        // statement.description = req.body.description
+        statement.statementDo = req.body.statementDo
+        statement.statementUser = req.body.statementUser
+        statement.statementInsight = req.body.statementInsight
+        statement.name = req.body.statementUser + " needs (a way) to " + req.body.statementDo + " because " + req.body.statementInsight + "."
+        
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(statement, req.body.cover)
         }
@@ -153,7 +160,7 @@ router.delete('/:id', ensureAuth, async (req, res) => {
         res.redirect('/statements')
     } 
     catch {
-        if (note == null) {
+        if (statement == null) {
             res.redirect('/')
         } else{
             res.redirect(`/statements/${statement.id}`)

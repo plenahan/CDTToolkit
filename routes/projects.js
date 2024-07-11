@@ -4,6 +4,8 @@ const Project = require('../models/project')
 const Thing = require('../models/thing')
 const Note = require('../models/note')
 const User = require('../models/user')
+const Team = require('../models/team')
+const TeamProject = require('../models/TeamProject')
 const {ensureAuth, ensureGuest } = require('../middleware/auth')
 const tool = {
     title: "Project",
@@ -50,13 +52,15 @@ router.get('/', ensureAuth, async (req, res) => {
 router.get('/new', async (req, res) => {
     const things = await Thing.find({ })
     const users = await User.find({ })
+    const teams = await Team.find({ users: req.user.id })
     res.render('partials/formPage', { 
         creations: req.Creations, 
         tool: tool,
         object: new Project(),
         things: things,
         users: users,
-        account: req.user
+        account: req.user,
+        teams: teams
     })
 })
 
@@ -67,11 +71,23 @@ router.post('/', async(req, res) => {
     //     projectUsers.push(User.find({ email: user }))
     // })
 
-    const project = new Project({
+    let project = new Project({
+        name: req.body.name,
+        children: req.body.children,
+        users: req.body.users,
+        teams: req.body.teams
+    })
+    let teams = project.teams
+    console.log(teams)
+    project = new Project({
         name: req.body.name,
         children: req.body.children,
         users: req.body.users
     })
+    teams.forEach(async team => {
+        let newRelation = new TeamProject({ team: team, project: project })
+        newRelation.save()
+    });
     try {
         const newProject = await project.save()
         res.redirect(`/projects/${newProject._id}`)
@@ -92,10 +108,26 @@ router.get('/:id', async (req, res) => {
     let lotusBlossoms = [];
     let prototypes = [];
     let tests = [];
+    let allUsers = [];
 
 
-    let query = await Project.findById(req.params.id).populate('users').populate("children").exec()
-    let users = await User.find({ })
+    let query = await Project.findById(req.params.id).populate('users').populate("children").populate({path: 'teams', populate: {path: 'users'}}).exec();
+    let teams = query.teams
+    let users = await User.find({ });
+    const teamproject = await TeamProject.find({ project: query }).populate({path: 'team', populate: {path: 'users'}})
+    for(var i = 0; i < query.users.length; i++){
+        allUsers.push(query.users[i])
+    }
+    
+    // for(var i = 0; i < teamproject.length; i++){
+    //     if(teamproject[i].team.users){
+    //         for(var j = 0; j < teamproject[i].team.users.length; j++){
+    //             if(allUsers.indexOf(teamproject[i].team.users[j]) == -1){
+    //                 allUsers.push(teamproject[i].team.users[j])
+    //             }
+    //         }
+    //     }
+    // }
     // let project = await Project.findById(req.params.id)
     query.children.forEach(child => {
         switch(child.creationType){
@@ -149,7 +181,8 @@ router.get('/:id', async (req, res) => {
             object: query,
             things: await Thing.find({}),
             reflections: reflections,
-            users: users
+            users: allUsers,
+            teams: teamproject
          })
     } catch (err) {
         console.log(err)
@@ -162,13 +195,17 @@ router.get('/:id/edit', async (req, res) => {
         const project = await Project.findById(req.params.id).populate('children').populate('users').exec()
         const things = await Thing.find({ })
         const users = await User.find({ })
+        const teams = await Team.find({})
+        
         res.render('partials/editPage', { 
             creations: req.Creations, 
             tool: tool,
             object: project,
             things: things,
             users: users,
-            account: req.user })
+            account: req.user,
+            teams: teams
+        })
     } catch {
         res.redirect('/projects')
     }
@@ -177,11 +214,29 @@ router.get('/:id/edit', async (req, res) => {
 router.put('/:id', async (req, res) => {
     let project
     try {
+        const teamProject = await TeamProject.find()
         project = await Project.findById(req.params.id)
         project.name = req.body.name
         project.children = req.body.children
         project.reflection = req.body.reflection
         project.users = req.body.users
+        project.teams = req.body.teams
+        var teamprojects = await TeamProject.find({ project: project })
+        if(project.teams){
+            project.teams.forEach(async team =>{
+                if((await TeamProject.find({ team: team, project: project })).length == 0){
+                    let newTeamProject = new TeamProject({ team: team, project: project})
+                    await newTeamProject.save()
+                }
+            })
+        }
+        if(teamprojects){
+            teamprojects.forEach(async teamproject => {
+                if(project.teams == null || project.teams.indexOf(teamproject.team) == -1){
+                    await teamproject.deleteOne()
+                }
+            })
+        }
         await project.save()
         res.redirect(`/projects/${project.id}`)
     } catch {
@@ -193,6 +248,10 @@ router.delete('/:id', async (req, res) => {
     let project
     try {
         project = await Project.findById(req.params.id)
+        let teamprojects = await TeamProject.find({ project: project })
+        teamprojects.forEach(async teamproject => {
+            await teamproject.deleteOne()
+        })
         await project.deleteOne()
         res.redirect('/projects')
     } 

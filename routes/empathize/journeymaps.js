@@ -4,6 +4,7 @@ const router = express.Router()
 const JourneyMap = require('../../models/thing')
 const {ensureAuth, ensureGuest } = require('../../middleware/auth')
 const Note = require('../../models/note')
+const Persona = require('../../models/thing')
 const tool = {
     title: "Journey Map",
     description: "Create a Journey Map to help you create a journey.",
@@ -47,10 +48,12 @@ router.get('/', ensureAuth, async (req, res) => {
 })
 
 router.get('/new', ensureAuth, async (req, res) => {
+    const personas = await Persona.find({ creationType: 'Persona', user: req.user })
     res.render('partials/formPage', { 
         creations: req.Creations, 
         tool: tool,
-        object: new JourneyMap()
+        object: new JourneyMap(),
+        personas: personas
     })
 })
 
@@ -60,7 +63,10 @@ router.post('/', ensureAuth, async (req, res) => {
         description: req.body.description,
         creationType: tool.creationType,
         link: tool.link,
-        user: req.user
+        user: req.user,
+        chart: req.body.chart,
+        construct: req.body.construct,
+        annotations: req.body.annotations
     })
     if (req.body.cover != null && req.body.cover !== '') {
         saveCover(journeymap, req.body.cover)
@@ -84,10 +90,13 @@ router.get('/:id', ensureAuth, async (req, res) => {
 router.get('/:id/edit', ensureAuth, async (req, res) => {
     try {
         const journeymap = await JourneyMap.findById(req.params.id)
+        const personas = await Persona.find({ creationType: 'Persona', user: req.user });
         res.render('partials/editPage', { 
             creations: req.Creations, 
             tool: tool,
-            object: journeymap })
+            object: journeymap,
+            personas: personas
+         })
     } catch {
         res.redirect('/journeymaps')
     }
@@ -134,6 +143,9 @@ router.put('/:id', ensureAuth, async (req, res) => {
         journeymap = await JourneyMap.findById(req.params.id)
         journeymap.name = req.body.name
         journeymap.description = req.body.description
+        journeymap.chart = req.body.chart
+        journeymap.construct = req.body.construct
+        journeymap.annotations = req.body.annotations
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(journeymap, req.body.cover)
         }

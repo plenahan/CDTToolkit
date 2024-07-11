@@ -8,6 +8,11 @@
     height: calc(var(--image-cover-width) / var(--image-cover-aspect-ratio));
 }
 
+.pdf-cover {
+    width: 500px;
+    height: calc(var(250px) / var(--image-cover-aspect-ratio));
+}
+
 .image-grid {
     display: grid;
     justify-content: center;
