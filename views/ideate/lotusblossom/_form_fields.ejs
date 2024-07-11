@@ -3,15 +3,19 @@
         <label>Name*</label>
         <input type="text" name="name" value="<%= object.name %>">
     </div>
-    <div class="form-item">
+    <!-- <div class="form-item">
         <label>Description</label>
         <textarea name="description"><%= object.description %></textarea>
     </div>
     <div class="form-item form-item-no-grow">
         <label>Cover</label>
         <input type="file" name="cover" class="image-cover filepond">
-    </div>
+    </div> -->
+    <input style="display: none;" type="text" id="chart" name="chart" value="<%= object.chart %>">
+    <input style="display: none;" type="text" id="annotations" name="annotations" value="<%= object.annotations %>">
+    <input style="display: none;" type="text" id="tree" name="tree" value="<%= object.tree %>">
 </div>
+
 <!-- <div class="form-row">
     <div class="form-item form-item-no-grow">
         <label>Cover</label>
@@ -29,3 +33,1218 @@
     </div>
 </div>
 <input type="text" name="type" value="basic" style="display: none;"> -->
+
+<canvas height="200px" id="myChart"></canvas>
+
+<script>
+    var chartData = null;
+    if(document.getElementById('chart').value != null && document.getElementById('chart').value != ""){
+      chartData = JSON.parse(document.getElementById('chart').value);
+    }
+
+    var chartAnnotations = null;
+    if(document.getElementById('annotations').value != null && document.getElementById('annotations').value != ""){
+        chartAnnotations = JSON.parse(document.getElementById('annotations').value);
+    }
+
+    var chartTree = null;
+    if(document.getElementById('tree').value != null && document.getElementById('tree').value != ""){
+        chartTree = JSON.parse(document.getElementById('tree').value);
+        console.log(document.getElementById('tree').value)
+    }
+
+    class TreeNode {
+        constructor(value) {
+            this.value = value;
+            this.descendants = [];
+        }
+    }
+
+    function formatLabel(str, maxwidth){
+        var sections = [];
+        var words = str.split(" ");
+        var temp = "";
+
+        words.forEach(function(item, index){
+            if(temp.length > 0)
+            {
+            var concat = temp + ' ' + item;
+
+            if(concat.length > maxwidth){
+                sections.push(temp);
+                temp = "";
+            }
+            else{
+                if(index == (words.length-1)) {
+                sections.push(concat);
+                return;
+                }
+                else {
+                temp = concat;
+                return;
+                }
+            }
+            }
+
+            if(index == (words.length-1)) {
+            sections.push(item);
+            return;
+            }
+
+            if(item.length < maxwidth) {
+            temp = item;
+            }
+            else {
+            sections.push(item);
+            }
+
+        });
+
+        return sections;
+    }
+
+    function arrayInArray(array, item) {
+        for (var i = 0; i < array.length; i++) {
+            // This if statement depends on the format of your array
+            if (array[i][0] == item[0] && array[i][1] == item[1]) {
+                return i;   // Found it
+            }
+        }
+        return -1;   // Not found
+    }
+
+    var chart = document.getElementById('chart');
+    var annot= document.getElementById('annotations');
+    var tree = document.getElementById('tree');
+    let colors = ['red', 'lightblue', 'yellow', 'lightgreen', 'mediumpurple', 'orange'];
+    // let data = [];
+
+    function addDataset(cord1, cord2) {
+        let data = [];
+        for(let i = 0; i < 7; i++){
+            data.push(null);
+        }
+        data[cord1[0]] = cord1[1];
+        data[cord2[0]] = cord2[1];
+        const newDataset = {
+            label: 'test',
+            backgroundColor: colors[0],
+            borderColor: colors[0],
+            data: data,
+            borderWidth: 2,
+            tension: .4,
+        }
+        chart1.data.datasets.push(newDataset);
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+        
+    }
+
+    function addData() {
+        let label = document.getElementById('dataName').value;
+        let longLabel = formatLabel(label, 20)
+        let val = document.getElementById('val').value;
+        const data = chart1.data;
+        // if (data.datasets.length > 0) {
+            data.labels.push(longLabel);
+        for (let index = 0; index < data.datasets.length; ++index) {
+          data.datasets[index].data.push(val);
+        }
+
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+        var events = document.getElementById('events');
+        var option = document.createElement("option");
+        option.text = label;
+        option.id = label;
+        option.value = label;
+        option.selected = true;
+        events.appendChild(option);
+        // }
+    }
+
+    function removeDataset() {
+        let name = document.getElementById('datasetName').value;
+        for(let i = 0; i < chart1.data.datasets.length; i++){
+            if(chart1.data.datasets[i].label == name){
+                deleteAnnotationByDataset(i);
+                chart1.data.datasets.splice(i, 1);
+            }
+        }
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function removeData(){
+        // let label = document.getElementById('dataName').value;
+        let sel = document.getElementById('events')
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        
+        // console.log(label);
+        // console.log(chart1.data.labels)
+        let index = chart1.data.labels.indexOf(label);
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        // console.log(label == chart1.data.labels[4]);
+        if(index != -1){
+            deleteAnnotationByEvent(index);
+            chart1.data.labels.splice(index, 1);
+            chart1.data.datasets.forEach(dataset => {
+                dataset.data.splice(index, 1);
+            })
+            
+            chart1.update();
+            chart.value = JSON.stringify(chart1.data);
+            annot.value = JSON.stringify(annotations);
+            let op = document.getElementById(label);
+            sel.removeChild(op);
+        }
+        
+    }
+    
+    let center = {
+        type: 'label',
+        backgroundColor: 'yellow',
+        borderWidth: 2,
+        borderColor: 'black',
+        // radius: 50,
+        xValue: 3,
+        yValue: 50,
+        content: ['Key Idea'],
+        callout: {
+            display: true,
+            borderColor: 'black',
+        }
+    }
+    let centernode;
+    if (chartTree != null){
+        console.log("edit: " + chartTree);
+        centernode = new TreeNode(chartTree.value);
+        centernode.descendants = chartTree.descendants;
+        console.log(centernode.descendants);
+        // console.log(chartTree);
+        // for(let i = 0; i < centernode.descendants.length; i++) {
+        //     console.log()
+        // }
+        let temp;
+        
+
+        // need the dropdown menus to appear for each blossom level, doing a dfs
+
+            setTimeout (function() {
+                let selLeft = document.getElementById('oneLeftSelect');
+                let option = document.createElement('option');
+                document.getElementById('oneLeft').hidden = false;
+                console.log(centernode.descendants[0].value);
+                option.value = JSON.stringify(centernode.descendants[0].value);
+                option.id = centernode.descendants[0].value.content;
+                option.text = centernode.descendants[0].value.content;
+                option.selected = true;
+                selLeft.appendChild(option);
+                for(let i = 0; i < centernode.descendants.length; i++) {
+                    if(centernode.descendants[i].descendants.length > 0) {
+                        document.getElementById('twoLeft').hidden = false;
+                        for(let j = 0; j < centernode.descendants[i].descendants.length; j++) {
+                            if(centernode.descendants[i].descendants[j].length > 0) {
+                                document.getElementById('threeLeft').hidden = false;
+                            }
+                        }
+                    }
+                }
+            }, 1000)
+    } else {
+        centernode = new TreeNode(center);
+        console.log(centernode);
+    }
+    
+    // let oneLeftAnnotations = [];
+    // let oneRightAnnotations = [];
+    // let twoLeftAnnotations = [];
+    // let twoRightAnnotations = [];
+    let annotations;
+    if (chartAnnotations != null){
+        // console.log(chartAnnotations);
+        annotations = chartAnnotations;
+    } else {
+        annotations = [ center ];
+        // console.log(annotations);
+    }
+    annot.value = JSON.stringify(annotations);
+    tree.value = JSON.stringify(centernode);
+    // annot.value = JSON.stringify(annotations);
+
+    function createCenterAnnotation(txt) {
+        let selRight = document.getElementById('oneRightSelect');
+        let selLeft = document.getElementById('oneLeftSelect');
+        let option = document.createElement('option');
+        let blossom;
+        let blossomnode;
+        if(centernode.descendants.length < 6){
+            switch(centernode.descendants.length){
+                case 0:
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 50,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    // firstLevelAnnotations.push(blossom);
+                    annotations.push(blossom);
+                    addDataset([2, 50], [3, 50]);
+                    // fillCurrentAnnotations();
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    document.getElementById('oneLeft').hidden = false;
+                    break;
+                case 1: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 50,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([3, 50], [4, 50]);
+                    // fillCurrentAnnotations();
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    document.getElementById('oneRight').hidden = false;
+                    break;
+                case 2: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 80,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([2, 80], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+                case 3: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 20,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    addDataset([4, 20], [3, 50]);
+                    // fillCurrentAnnotations();
+                    break;
+                case 4: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 20,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([2, 20], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+                case 5: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 80,
+                        content: [txt],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([4, 80], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+            }
+        } else {
+            alert("You can not have more than 6 first level blossoms.");
+        }
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createCenterAnnotation() {
+        let selRight = document.getElementById('oneRightSelect');
+        let selLeft = document.getElementById('oneLeftSelect');
+        let option = document.createElement('option');
+        let blossom;
+        let blossomnode;
+        if(centernode.descendants.length < 6){
+            switch(centernode.descendants.length){
+                case 0:
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 50,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    // firstLevelAnnotations.push(blossom);
+                    annotations.push(blossom);
+                    addDataset([2, 50], [3, 50]);
+                    // fillCurrentAnnotations();
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    document.getElementById('oneLeft').hidden = false;
+                    break;
+                case 1: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 50,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([3, 50], [4, 50]);
+                    // fillCurrentAnnotations();
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    document.getElementById('oneRight').hidden = false;
+                    break;
+                case 2: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 80,
+                        content: ['Blossom '  + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([2, 80], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+                case 3: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 20,
+                        content: ['Blossom '  + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    addDataset([4, 20], [3, 50]);
+                    // fillCurrentAnnotations();
+                    break;
+                case 4: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 2,
+                        yValue: 20,
+                        content: ['Blossom '  + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([2, 20], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selLeft.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+                case 5: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightblue',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: 4,
+                        yValue: 80,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    centernode.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([4, 80], [3, 50]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    selRight.appendChild(option);
+                    // fillCurrentAnnotations();
+                    break;
+            }
+        } else {
+            alert("You can not have more than 6 first level blossoms.");
+        }
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createSecondRightAnnotation() {
+        let val = document.getElementById('oneRightSelect').value;
+        // console.log(val);
+        centernode.descendants.forEach(node => {
+            // console.log(JSON.stringify(node.value))
+            if(JSON.stringify(node.value) == val){
+                createSecondLevelAnnotation(node, 1)
+            }
+        })
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createThirdRightAnnotation() {
+        let val = document.getElementById('twoRightSelect').value;
+        // console.log(val);
+        centernode.descendants.forEach(node => {
+            node.descendants.forEach(newnode => {
+                // console.log(JSON.stringify(node.value))
+                if(JSON.stringify(newnode.value) == val){
+                    createThirdLevelAnnotation(newnode, 1)
+                }
+            })
+        })
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createThirdLeftAnnotation() {
+        let val = document.getElementById('twoLeftSelect').value;
+        // console.log(val);
+        centernode.descendants.forEach(node => {
+            node.descendants.forEach(newnode => {
+                // console.log(JSON.stringify(node.value))
+                if(JSON.stringify(newnode.value) == val){
+                    createThirdLevelAnnotation(newnode, -1)
+                }
+            })
+        })
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createSecondLeftAnnotation() {
+        let val = document.getElementById('oneLeftSelect').value;
+        // console.log(val);
+        centernode.descendants.forEach(node => {
+            // console.log(JSON.stringify(node.value))
+            if(JSON.stringify(node.value) == val){
+                createSecondLevelAnnotation(node, -1)
+            }
+        })
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createSecondLevelAnnotation(node, x) {
+        let blossom;
+        let blossomnode;
+        let sel;
+        let d;
+        if(x == 1){
+            sel = document.getElementById('twoRightSelect');
+            d = document.getElementById('twoRight');
+        } else {
+            sel = document.getElementById('twoLeftSelect');
+            d = document.getElementById('twoLeft');
+        }
+        let option = document.createElement('option');
+        if(node.descendants.length < 3){
+            switch(node.descendants.length){
+                case 0: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'orange',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: node.value.xValue+x,
+                        yValue: node.value.yValue,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    node.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    sel.appendChild(option);
+                    d.hidden = false;
+                    addDataset([node.value.xValue, node.value.yValue], [node.value.xValue+x, node.value.yValue]);
+                    break;
+                case 1:
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'orange',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: node.value.xValue+x,
+                        yValue: node.value.yValue+10,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    node.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    sel.appendChild(option);
+                    d.hidden = false;
+                    addDataset([node.value.xValue, node.value.yValue], [node.value.xValue+x, node.value.yValue+10]);
+                    break;
+                    
+                case 2:
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'orange',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: node.value.xValue+x,
+                        yValue: node.value.yValue-10,
+                        content: ['Blossom '  + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    node.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    sel.appendChild(option);
+                    d.hidden = false;
+                    addDataset([node.value.xValue, node.value.yValue], [node.value.xValue+x, node.value.yValue-10]);
+                    break;
+            }
+        } else {
+            alert("You can not have more than 3 second level blossoms.");
+        }
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function createThirdLevelAnnotation(node, x) {
+        let blossom;
+        let blossomnode;
+        let sel;
+        let d;
+        if(x == 1){
+            sel = document.getElementById('threeRightSelect');
+            d = document.getElementById('threeRight');
+        } else {
+            sel = document.getElementById('threeLeftSelect');
+            d = document.getElementById('threeLeft');
+        }
+        let option = document.createElement('option');
+        if(node.descendants.length < 2){
+            switch(node.descendants.length){
+                case 0: 
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightgreen',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: node.value.xValue+x,
+                        yValue: node.value.yValue,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    node.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([node.value.xValue, node.value.yValue], [node.value.xValue+x, node.value.yValue]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    sel.appendChild(option);
+                    d.hidden = false;
+                    break;
+                case 1:
+                    blossom = {
+                        type: 'label',
+                        backgroundColor: 'lightgreen',
+                        borderWidth: 2,
+                        borderColor: 'black',
+                        // radius: 50,
+                        xValue: node.value.xValue+x,
+                        yValue: node.value.yValue+5,
+                        content: ['Blossom ' + annotations.length],
+                        callout: {
+                            display: true,
+                            borderColor: 'black',
+                        }
+                    }
+                    blossomnode = new TreeNode(blossom);
+                    node.descendants.push(blossomnode);
+                    annotations.push(blossom);
+                    addDataset([node.value.xValue, node.value.yValue], [node.value.xValue+x, node.value.yValue+5]);
+                    option.value = JSON.stringify(blossom);
+                    option.id = blossom.content;
+                    option.text = blossom.content;
+                    option.selected = true;
+                    sel.appendChild(option);
+                    d.hidden = false;
+                    break;
+            }
+        } else {
+            alert("You can not have more than 2 three level blossoms.");
+        }
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function updateAnnotation(index, i, val) {
+        annotations.forEach(annotation => {
+            if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                annotation.yValue = val;
+            }
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function editAnnotationText() {
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        let val = document.getElementById('annotation').value;
+        
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    annotations.forEach(annotation => {
+                        if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                            annotation.content = formatLabel(val, 40);
+                        }
+                    })
+                    chart1.update();
+                }
+            }
+        }
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function editCenterAnnotationText() {
+        let val = document.getElementById('keyidea').value;
+        annotations.forEach(ann => {
+            // console.log(ann);
+            // console.log(centernode.value);
+            if(ann.xValue == centernode.value.xValue && ann.yValue == centernode.value.yValue){
+                console.log("in")
+                ann.content = formatLabel(val, 30);
+            }
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function oneRightAnnotationText() {
+        let val = document.getElementById('oneRightInput').value;
+        let sel = document.getElementById('oneRightSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            
+            if(JSON.stringify(child.value) == sel.value){
+                editNodeAnnotationText(child, val, op);
+            }
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function twoRightAnnotationText() {
+        let val = document.getElementById('twoRightInput').value;
+        let sel = document.getElementById('twoRightSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            child.descendants.forEach(newchild => {
+                if(JSON.stringify(newchild.value) == sel.value){
+                    editNodeAnnotationText(newchild, val, op);
+                }
+            })
+        })
+        chart1.update();
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function oneLeftAnnotationText() {
+        let val = document.getElementById('oneLeftInput').value;
+        let sel = document.getElementById('oneLeftSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            if(JSON.stringify(child.value) == sel.value){
+                editNodeAnnotationText(child, val, op);
+            }
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function twoLeftAnnotationText() {
+        let val = document.getElementById('twoLeftInput').value;
+        let sel = document.getElementById('twoLeftSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            child.descendants.forEach(newchild => {
+                if(JSON.stringify(newchild.value) == sel.value){
+                    editNodeAnnotationText(newchild, val, op);
+                }
+            })
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function threeLeftAnnotationText() {
+        let val = document.getElementById('threeLeftInput').value;
+        let sel = document.getElementById('threeLeftSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            child.descendants.forEach(newchild => {
+                newchild.descendants.forEach(anotherchild => {
+                    if(JSON.stringify(anotherchild.value) == sel.value){
+                        editNodeAnnotationText(anotherchild, val, op);
+                    }
+                })
+            })
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function threeRightAnnotationText() {
+        let val = document.getElementById('threeRightInput').value;
+        let sel = document.getElementById('threeRightSelect');
+        // console.log(sel.options[0]);
+        let op = sel.options[sel.selectedIndex];
+        centernode.descendants.forEach(child => {
+            child.descendants.forEach(newchild => {
+                newchild.descendants.forEach(anotherchild => {
+                    if(JSON.stringify(anotherchild.value) == sel.value){
+                        editNodeAnnotationText(anotherchild, val, op);
+                    }
+                })
+            })
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function editNodeAnnotationText(node, val, op) {
+        annotations.forEach(ann => {
+            console.log(ann + " | " + node.value);
+            if(ann == node.value){
+                ann.content = formatLabel(val, 30);
+                node.value = ann;
+                op.id = ann.content;
+                op.value = JSON.stringify(ann);
+                op.text = ann.content;
+            }
+        })
+        // chart1.update();
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function deleteAnnotation() {
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        let val = document.getElementById('annotation').value;
+        let j = 0;
+        
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    annotations.forEach(annotation => {
+                        if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                            annotations.splice(j, 1)
+                        }
+                        j++;
+                    })
+                    chart1.update();
+                }
+            }
+        }
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    function deleteAnnotationByDataset(datasetIndex){
+        let j = 0;
+        for(let i = 0; i < chart1.data.datasets[datasetIndex].data.length; i++){
+            annotations.forEach(annotation => {
+                if(annotation.yValue == chart1.data.datasets[datasetIndex].data[i]){
+                    annotations.splice(j, 1);
+                    j--;
+                }
+                j++;
+            })
+            j = 0;
+        }
+        annot.value = JSON.stringify(annotations);
+        tree.value = JSON.stringify(centernode);
+    }
+
+    // function fillCurrentAnnotations() {
+    //     let currentAnnotations = document.getElementById("currentAnnotations");
+    //     let ann;
+    //     // annotations.forEach(annotation => {
+    //     ann = document.createElement('option');
+    //     ann.value = JSON.stringify(annotations[annotations.length-1]);
+    //     ann.id = annotations[annotations.length-1].content[0];
+    //     ann.text = annotations[annotations.length-1].content[0];
+    //     ann.selected = true;
+    //     currentAnnotations.appendChild(ann);
+    //     // })
+    // }
+
+    let chart1Data;
+    if (chartData != null){
+        // console.log(chartData);
+        chart1Data = chartData;
+    } else {
+        chart1Data = {
+            labels: ['1', '2', '3', '4', '5', '6', '7'],
+            datasets: [{type: 'bar', label: '', hidden: true} ,
+            // { 
+            //     type: 'line',
+            //     label: 'Example',
+            //     data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100],
+            //     borderWidth: 10,
+            //     tension: .4,
+            // }
+        ]}
+    }
+
+    let ctx = document.getElementById('myChart');
+    console.log(ctx.element);
+    let chart1 = new Chart(ctx, {
+        type: 'line',
+        data: chart1Data,
+        options: {
+            events: ['mousedown', 'mouseup', 'mousemove', 'mouseout'],
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    display: false
+                },
+                annotation: {
+                    enter(ctx) {
+                    element = ctx.element;
+                    },
+                    leave() {
+                    element = undefined;
+                    lastEvent = undefined;
+                    },
+                    annotations
+                },
+                tooltip: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: false,
+                        text: "Enter Construct"
+                    },
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false
+                    },
+                    beginAtZero: true,
+                    display: true,
+                    min: 0,
+                    max: 100
+                },
+                x: {
+                    position: 'top',
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false 
+                    }
+                }
+            }
+        }
+        });
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+
+    function changeRed(){
+        let val = document.getElementById('val').value;
+        // chart1.data.datasets[0].data[0] = val;
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    updateAnnotation(index, i, val);
+                    chart1.data.datasets[i].data[index] = val;
+                }
+            }
+        }
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function changeColor() {
+        let color = document.getElementById('datasetColor').value;
+        let sel = document.getElementById('datasetColor')
+        sel.style.backgroundColor = colors[color];
+    }
+</script>
+
+<div class="form-row">
+    <!-- <select name="currentAnnotations" id="currentAnnotations"></select> -->
+    <div style="max-width: 12%;" class="form-item">
+        <div id="threeLeft" hidden>
+            <select style="max-width: 100%;" name="threeLeftSelect" id="threeLeftSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="threeLeftAnnotationText()" id="threeLeftInput" type="text">
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div id="twoLeft" hidden><button class="btn btn-secondary" type="button" onclick="createThirdLeftAnnotation()">Create Annotation</button>
+            <select style="max-width: 100%;" name="twoLeftSelect" id="twoLeftSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="twoLeftAnnotationText()" id="twoLeftInput" type="text">
+
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div id="oneLeft" hidden><button class="btn btn-secondary" type="button" onclick="createSecondLeftAnnotation()">Create Annotation</button>
+            <select name="oneLeftSelect" id="oneLeftSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="oneLeftAnnotationText()" id="oneLeftInput" type="text">
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div><button class="btn btn-secondary" type="button" onclick="createCenterAnnotation()">Create Annotation</button>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="editCenterAnnotationText()" id="keyidea" type="text">
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div id="oneRight" hidden><button class="btn btn-secondary" type="button" onclick="createSecondRightAnnotation()">Create Annotation</button>
+            <select style="max-width: 100%;" name="oneRightSelect" id="oneRightSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="oneRightAnnotationText()" id="oneRightInput" type="text">
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div id="twoRight" hidden><button class="btn btn-secondary" type="button" onclick="createThirdRightAnnotation()">Create Annotation</button>
+            <select style="max-width: 100%;" name="twoRightSelect" id="twoRightSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="twoRightAnnotationText()" id="twoRightInput" type="text">
+        </div>
+    </div>
+    <div style="max-width: 12%;" class="form-item">
+        <div id="threeRight" hidden>
+            <select style="max-width: 100%;" name="threeRightSelect" id="threeRightSelect"></select>
+            <input style="max-width: 100%; margin-left: 5px;" oninput="threeRightAnnotationText()" id="threeRightInput" type="text">
+        </div>
+    </div>
+</div>
+
+<script>
+    // fillCurrentAnnotations();
+</script>

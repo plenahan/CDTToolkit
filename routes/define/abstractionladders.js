@@ -60,7 +60,9 @@ router.post('/', ensureAuth, async (req, res) => {
         description: req.body.description,
         creationType: tool.creationType,
         link: tool.link,
-        user: req.user
+        user: req.user,
+        chart: req.body.chart,
+        annotations: req.body.annotations
     })
     if (req.body.cover != null && req.body.cover !== '') {
         saveCover(abstractionladder, req.body.cover)
@@ -134,6 +136,9 @@ router.put('/:id', ensureAuth, async (req, res) => {
         abstractionladder = await AbstractionLadder.findById(req.params.id)
         abstractionladder.name = req.body.name
         abstractionladder.description = req.body.description
+        abstractionladder.chart = req.body.chart;
+        abstractionladder.annotations = req.body.annotations;
+
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(abstractionladder, req.body.cover)
         }

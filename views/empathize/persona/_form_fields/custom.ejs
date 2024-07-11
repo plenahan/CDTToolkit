@@ -1,0 +1,99 @@
+<div class="form-row">
+    <div class="form-item">
+        <label>Name*</label>
+        <input type="text" name="name" value="<%= object.name %>">
+    </div>
+    <div class="form-item form-item-no-grow">
+        <label>Cover</label>
+        <input type="file" name="cover" class="image-cover filepond">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-item">
+        <label>Line Input<a href="javascript:void(0);" class="add_button_line" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a></label>
+        <div class="field_wrapper_line">
+            <div>
+                <!-- <input type="text" name="field_name" value=""/> -->
+                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                <% var i = 0 %>
+                <% object.lines.forEach(line => { %>
+                <div>
+                    <label>Label</label><label style="padding-left: 220px;">Input</label><br><input type="text" name="line_label" value="<%= object.lines_labels[i] %>"/><input type="text" name="line" value="<%= line %>"/>
+                    <a href="javascript:void(0);" class="remove_button_line"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a>
+                </div>
+                <% i++ }) %>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var maxField = 10; //Input fields increment limitation
+                var addButtonLines = $('.add_button_line'); //Add button selector
+                var wrapperLines = $('.field_wrapper_line'); //Input field wrapper
+                var x = 1; //Initial field counter is 1
+                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                
+                //Once add button is clicked
+                $(addButtonLines).click(function(){
+                    //Check maximum number of input fields
+                    if(x < maxField){ 
+                        x++; //Increment field counter
+                        $(wrapperLines).append('<div><label>Label</label><label style="padding-left: 220px;">Input</label><br><input type="text" name="line_label" value=""/><input type="text" name="line" value=""/><a href="javascript:void(0);" class="remove_button_line"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                    }
+                });
+                
+                //Once remove button is clicked
+                $(wrapperLines).on('click', '.remove_button_line', function(e){
+                    e.preventDefault();
+                    $(this).parent('div').remove(); //Remove field html
+                    x--; //Decrement field counter
+                });
+            });
+            </script>
+    </div>
+    </div>
+    <div class="form-row">
+    <div class="form-item">
+        <label>Textareas<a href="javascript:void(0);" class="add_button_textarea" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a></label>
+        <div class="field_wrapper_textarea">
+            <div>
+                <!-- <input type="text" name="field_name" value=""/> -->
+                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                <% var i = 0 %>
+                <% object.textareas.forEach(textarea => { %>
+                <div>
+                    <label>Label</label><br><input type="text" name="textarea_label" value="<%= object.textareas_labels[i] %>"/><br><label>Input</label><br><textarea type="text" name="textarea" value="<%= textarea %>" rows="5" cols="40"><%= textarea %></textarea>
+                    <a href="javascript:void(0);" class="remove_button_textarea"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a>
+                </div>
+                <% i++ }) %>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var maxField = 10; //Input fields increment limitation
+                var addButtonTextarea = $('.add_button_textarea'); //Add button selector
+                var wrapperTextarea = $('.field_wrapper_textarea'); //Input field wrapper
+                var x = 1; //Initial field counter is 1
+                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                
+                //Once add button is clicked
+                $(addButtonTextarea).click(function(){
+                    //Check maximum number of input fields
+                    if(x < maxField){ 
+                        x++; //Increment field counter
+                        $(wrapperTextarea).append('<div><label>Label</label><br><input type="text" name="textarea_label" value=""/><br><label>Input</label><br><textarea type="text" name="textarea" rows="5" cols="40" value=""></textarea><a href="javascript:void(0);" class="remove_button_textarea"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                    }
+                });
+                
+                //Once remove button is clicked
+                $(wrapperTextarea).on('click', '.remove_button_textarea', function(e){
+                    e.preventDefault();
+                    $(this).parent('div').remove(); //Remove field html
+                    x--; //Decrement field counter
+                });
+            });
+            </script>
+        
+    </div>
+</div>
+</div>
+<input type="text" name="type" value="custom" style="display: none;">

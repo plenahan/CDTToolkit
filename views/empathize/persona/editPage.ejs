@@ -1,0 +1,310 @@
+<div>
+    <h1>Edit <%= tool.title %></h1>
+    <p class="lead"><%= tool.description %></p>
+    <form action="/<%= tool.link %>/<%= object.id %>?_method=PUT" method="POST">
+        <div class="form-row">
+            <div class="form-item">
+                <label>Name*</label>
+                <input type="text" name="name" value="<%= object.name %>">
+            </div>
+            <div class="form-item">
+                <label>Description</label>
+                <textarea name="description"><%= object.description %></textarea>
+            </div>
+            <div class="form-item form-item-no-grow">
+                <label>Cover</label>
+                <input type="file" name="cover" class="image-cover filepond">
+            </div>
+        </div>
+        <% if(object.type == "basic"){ %>
+            <div id="basicForm">
+                <div class="form-row">
+                    <div class="form-item">
+                        <label>Who they want to be:</label>
+                        <textarea rows="5" name="who"><%= object.who %></textarea>
+                    </div>
+                    <div class="form-item">
+                        <label>What they want to do:</label>
+                        <textarea rows="5" name="what"><%= object.what %></textarea>
+                    </div>
+                    <div class="form-item">
+                        <label>How they want to feel:</label>
+                        <textarea rows="5" name="how"><%= object.how %></textarea>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+        <% if(object.type == "simple"){ %>
+            <div id="simpleForm">
+                <div class="form-row">
+                    <div class="form-item">
+                        <label>Background & Demographic</label>
+                        <input name="demographic" value="<%= object.demographic %>"></input>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-item">
+                        <label>Hobbies & Interests<a href="javascript:void(0);" class="add_button_interests" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_interests">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% object.interests.forEach(interest => { %>
+                                <div>
+                                    <input type="text" name="interest" value="<%= interest %>"/>
+                                    <a href="javascript:void(0);" class="remove_button_interests"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonInterests = $('.add_button_interests'); //Add button selector
+                                var wrapperInterests = $('.field_wrapper_interests'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonInterests).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperInterests).append('<div><input type="text" name="interest" value=""/><a href="javascript:void(0);" class="remove_button_interests"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperInterests).on('click', '.remove_button_interests', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                    </div>
+                    <div class="form-item">
+                        <label>Roles & Functions<a href="javascript:void(0);" class="add_button_motivations" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_motivations">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% object.motivations.forEach(motivation => { %>
+                                <div>
+                                    <input type="text" name="motivation" value="<%= motivation %>"/>
+                                    <a href="javascript:void(0);" class="remove_button_motivations"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonMotivations = $('.add_button_motivations'); //Add button selector
+                                var wrapperMotivations = $('.field_wrapper_motivations'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonMotivations).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperMotivations).append('<div><input type="text" name="motivation" value=""/><a href="javascript:void(0);" class="remove_button_motivations"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperMotivations).on('click', '.remove_button_motivations', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                    </div>
+                    <div class="form-item">
+                        <label>Personalities & Emotions<a href="javascript:void(0);" class="add_button_emotions" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_emotions">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% object.emotions.forEach(emotion => { %>
+                                <div>
+                                    <input type="text" name="emotion" value="<%= emotion %>"/>
+                                    <a href="javascript:void(0);" class="remove_button_emotions"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonEmotions = $('.add_button_emotions'); //Add button selector
+                                var wrapperEmotions = $('.field_wrapper_emotions'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonEmotions).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperEmotions).append('<div><input type="text" name="emotion" value=""/><a href="javascript:void(0);" class="remove_button_emotions"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperEmotions).on('click', '.remove_button_emotions', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                    </div>
+                    <div class="form-item">
+                        <label>Values & Goals<a href="javascript:void(0);" class="add_button_values" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_values">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% object.values.forEach(value => { %>
+                                <div>
+                                    <input type="text" name="value" value="<%= value %>"/>
+                                    <a href="javascript:void(0);" class="remove_button_values"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonValues = $('.add_button_values'); //Add button selector
+                                var wrapperValues = $('.field_wrapper_values'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonValues).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperValues).append('<div><input type="text" name="value" value=""/><a href="javascript:void(0);" class="remove_button_values"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperValues).on('click', '.remove_button_values', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                    </div>
+                </div>
+                <!-- <input type="text" name="type" value="simple" style="display: none;"> -->
+                
+            </div>
+        <% } %>
+        <% if(object.type == "custom"){ %>
+            <div id="customForm">
+                <div class="form-row">
+                    <div class="form-item">
+                        <label>Line Input<a href="javascript:void(0);" class="add_button_line" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_line">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% var i = 0 %>
+                                <% object.lines.forEach(line => { %>
+                                <div>
+                                    <label>Label</label><label style="padding-left: 220px;">Input</label><br><input type="text" name="line_label" value="<%= object.lines_labels[i] %>"/><input type="text" name="line" value="<%= line %>"/>
+                                    <a href="javascript:void(0);" class="remove_button_line"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% i++ }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonLines = $('.add_button_line'); //Add button selector
+                                var wrapperLines = $('.field_wrapper_line'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonLines).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperLines).append('<div><label>Label</label><label style="padding-left: 220px;">Input</label><br><input type="text" name="line_label" value=""/><input type="text" name="line" value=""/><a href="javascript:void(0);" class="remove_button_line"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperLines).on('click', '.remove_button_line', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                    </div>
+                    </div>
+                    <div class="form-row">
+                    <div class="form-item">
+                        <label>Textareas<a href="javascript:void(0);" class="add_button_textarea" title="Add field"><img height="20px" src="/public/stylesheets/shared/images/addicon.png"/></a></label>
+                        <div class="field_wrapper_textarea">
+                            <div>
+                                <!-- <input type="text" name="field_name" value=""/> -->
+                                <!-- <a href="javascript:void(0);" class="add_button" title="Add field"><img height="20px" src="/stylesheets/shared/images/addicon.png"/></a> -->
+                                <% var i = 0 %>
+                                <% object.textareas.forEach(textarea => { %>
+                                <div>
+                                    <label>Label</label><br><input type="text" name="textarea_label" value="<%= object.textareas_labels[i] %>"/><br><label>Input</label><br><textarea type="text" name="textarea" value="<%= textarea %>" rows="5" cols="40"><%= textarea %></textarea>
+                                    <a href="javascript:void(0);" class="remove_button_textarea"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a>
+                                </div>
+                                <% i++ }) %>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function(){
+                                var maxField = 10; //Input fields increment limitation
+                                var addButtonTextarea = $('.add_button_textarea'); //Add button selector
+                                var wrapperTextarea = $('.field_wrapper_textarea'); //Input field wrapper
+                                var x = 1; //Initial field counter is 1
+                                // var fieldHTML = '<div><input type="text" name="field_name" value=""/><a href="javascript:void(0);" class="remove_button"><img height="20px" src="/stylesheets/shared/images/removeicon.png"/></a></div>'; //New input field html 
+                                
+                                //Once add button is clicked
+                                $(addButtonTextarea).click(function(){
+                                    //Check maximum number of input fields
+                                    if(x < maxField){ 
+                                        x++; //Increment field counter
+                                        $(wrapperTextarea).append('<div><label>Label</label><br><input type="text" name="textarea_label" value=""/><br><label>Input</label><br><textarea type="text" name="textarea" rows="5" cols="40" value=""></textarea><a href="javascript:void(0);" class="remove_button_textarea"><img height="20px" src="/public/stylesheets/shared/images/removeicon.png"/></a></div>'); //Add field html
+                                    }
+                                });
+                                
+                                //Once remove button is clicked
+                                $(wrapperTextarea).on('click', '.remove_button_textarea', function(e){
+                                    e.preventDefault();
+                                    $(this).parent('div').remove(); //Remove field html
+                                    x--; //Decrement field counter
+                                });
+                            });
+                            </script>
+                        
+                    </div>
+                </div>
+                
+                <!-- <input type="text" name="type" value="custom" style="display: none;"> -->
+                
+            </div>
+        <% } %>            
+        <div class="btn-row">
+            <a class="btn btn-primary" href="/<%= tool.link %>/<%= object.id %>">Cancel</a>
+            <button class="btn btn-primary" type="submit">Update</button>
+        </div>
+    </form>
+</div>

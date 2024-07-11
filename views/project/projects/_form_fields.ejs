@@ -29,6 +29,23 @@
             <%  } %>
             <% return false; %>
             <% } %>
+          <select name="teams" id="teams" multiple>
+            <% teams.forEach(team => { %>
+                  <% if(contains(team, object.teams)) { %> <option selected label="<%= team.name %>" value="<%= team.id %>"> <% } else { %> <option label="<%= team.name %>" value="<%= team.id %>"> <% } %>
+            <% }) %>
+        </select>
+        <%- include('../../partials/multiselect.ejs', { id: 'teams' }) %>
+    </div>
+    <div class="form-item">
+      <% function contains(obj, list){ %>
+        <%  var i; %>
+        <%  for (i = 0; i < list.length; i++) { %>
+          <%   if (list[i].id === obj.id) { %>
+            <%     return true; %>
+            <%   } %>
+            <%  } %>
+            <% return false; %>
+            <% } %>
           <select name="users" id="users" multiple>
             <% users.forEach(user => { %>
                   <% if(contains(user, object.users)) { %> <option selected label="<%= user.email %>" value="<%= user.id %>"> <% } else { %> <option label="<%= user.email %>" value="<%= user.id %>"> <% } %>
@@ -38,5 +55,5 @@
     </div>
 </div>
 <div class="form-row">
-  <div style="background-color: lightgoldenrodyellow; border-radius: 10px; justify-content: center; align-items: center;" class="form-item" id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">Drag & Drop</div>
+  <div style="background-color: lightgoldenrodyellow; border-radius: 10px; justify-content: center; align-items: center;" class="form-item" id="div1" ondrop="drop(event, 'children')" ondragover="allowDrop(event)">Drag & Drop</div>
 </div>

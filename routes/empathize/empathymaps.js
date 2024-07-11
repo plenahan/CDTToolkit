@@ -4,6 +4,21 @@ const router = express.Router()
 const EmpathyMap = require('../../models/thing')
 const {ensureAuth, ensureGuest } = require('../../middleware/auth')
 const Note = require('../../models/note')
+const File = require('../../models/pdf')
+const multer = require("multer")
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/uploads/")
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + "-" + file.originalname)
+    },
+  });
+
+  const upload = multer({ storage });
+
 const tool = {
     title: "Empathy Map",
     description: "Create empathy maps to help you empathize.",
@@ -54,36 +69,68 @@ router.get('/new', ensureAuth, async (req, res) => {
     })
 })
 
-router.post('/', async (req, res) => {
-    const empathymap = new EmpathyMap({
-        name: req.body.name,
-        description: req.body.description,
-        feel: req.body.feel,
-        see: req.body.see,
-        do: req.body.do,
-        hear: req.body.hear,
-        pain: req.body.pain,
-        gain: req.body.gain,
-        creationType: tool.creationType,
-        link: tool.link,
-        user: req.user
-    })
-    if (req.body.cover != null && req.body.cover !== '') {
-        saveCover(empathymap, req.body.cover)
+router.post('/', upload.single("file"), async (req, res) => {
+    // console.log(req.file)
+    let empathymap
+    var path
+    if(req.file != null){
+        try {
+            const fileData = {
+                path: req.file.path,
+                originalName: req.file.originalname
+            }
+            const file = new File(fileData)
+            console.log(file)
+            empathymap = new EmpathyMap({
+                name: file.originalName,
+                description: "PDF Upload",
+                creationType: tool.creationType,
+                link: tool.link,
+                user: req.user, 
+                pdf: file
+            })
+            path = file.path;
+            path = path.replace(/\\/g, '/');
+            const newFile = await file.save()
+        }
+        catch(err) {
+            console.log(err)
+            res.redirect('/')
+        }
     }
-    try {
-        const newEmpathyMap = await empathymap.save()
-        res.redirect(`/empathymaps/${newEmpathyMap.id}`)
-    } catch {
-        res.redirect('/')
+    else {
+        empathymap = new EmpathyMap({
+            name: req.body.name,
+            description: req.body.description,
+            feel: req.body.feel,
+            see: req.body.see,
+            do: req.body.do,
+            hear: req.body.hear,
+            pain: req.body.pain,
+            gain: req.body.gain,
+            creationType: tool.creationType,
+            link: tool.link,
+            user: req.user
+        })
+    
+        if (req.body.cover != null && req.body.cover !== '') {
+            saveCover(empathymap, req.body.cover)
+        }
     }
+    const newEmpathyMap = await empathymap.save()
+    res.redirect(`/empathymaps/${newEmpathyMap.id}`)
 })
 
 router.get('/:id', ensureAuth, async (req, res) => {
-    const empathymap = await EmpathyMap.findById(req.params.id).populate('user').exec()
+    const empathymap = await EmpathyMap.findById(req.params.id).populate('user').populate('pdf').exec()
+    var path
+    if(empathymap.pdf){
+        path = empathymap.pdf.path;
+        path = path.replace(/\\/g, '/');
+    }
     const comments = await Note.find({connectedObject: empathymap }).populate('user').exec()
     res.render('partials/showPage', {creations: req.Creations, creation: empathymap, 
-        tool: tool, comments: comments, note: new Note()
+        tool: tool, comments: comments, note: new Note(), path: path
     })
 })
 

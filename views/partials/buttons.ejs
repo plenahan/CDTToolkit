@@ -1,6 +1,10 @@
 <div style="display: flex; float: right;">
+  <div>
     <a style="border-width: 1px; border-color: black; margin: 5px;" class="btn" href="/<%= link %>">Back</a>
+  </div>
+  <div>
   <a class="btn btn-primary" style="margin: 5px;" href="/<%= link %>/<%= creation.id %>/edit">Edit</a>
+</div>
   <div style="margin: 5px;">
   <%- include('./deleteForm', { url: `/${link}/${creation.id}` }) %></div>
 </div>

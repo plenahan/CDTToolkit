@@ -1,21 +1,11 @@
 <div class="form-row">
     <div class="form-item">
-        <label>Name*</label>
-        <input type="text" name="name" value="<%= object.name %>">
-    </div>
-    <div class="form-item">
-        <label>Description</label>
-        <textarea name="description"><%= object.description %></textarea>
-    </div>
-    <div class="form-item form-item-no-grow">
-        <label>Cover</label>
-        <input type="file" name="cover" class="image-cover filepond">
-    </div>
-</div>
-<div class="form-row">
-    <div class="form-item">
-        <label>Statement:</label>
-        <textarea rows="5" name="statement"><%= object.statement %></textarea>
+        <label>Statement: </label>
+        <div style="display: flex;">
+            <input placeholder="User" style="margin: 0px 10px;" type="text" name="statementUser" value="<%= object.statementUser %>">
+                needs (a way) to <input placeholder="Do Something" style="margin: 0px 10px;" type="text" name="statementDo" value="<%= object.statementDo %>">
+                because <input placeholder="Insight about User" style="margin: 0px 10px;" type="text" name="statementInsight" value="<%= object.statementInsight %>">
+        </div>
     </div>
 </div>
 <!-- <div class="form-row">

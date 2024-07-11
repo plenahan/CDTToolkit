@@ -59,7 +59,10 @@ router.post('/', ensureAuth, async (req, res) => {
         description: req.body.description,
         creationType: tool.creationType,
         link: tool.link,
-        user: req.user
+        user: req.user,
+        chart: req.body.chart,
+        annotations: req.body.annotations,
+        tree: req.body.tree
     })
     if (req.body.cover != null && req.body.cover !== '') {
         saveCover(lotusblossom, req.body.cover)
@@ -133,6 +136,9 @@ router.put('/:id', ensureAuth, async (req, res) => {
         lotusblossom = await LotusBlossom.findById(req.params.id)
         lotusblossom.name = req.body.name
         lotusblossom.description = req.body.description
+        lotusblossom.chart = req.body.chart;
+        lotusblossom.annotations = req.body.annotations;
+        lotusblossom.tree = req.body.tree;
         if (req.body.cover != null && req.body.cover !== '') {
             saveCover(lotusblossom, req.body.cover)
         }

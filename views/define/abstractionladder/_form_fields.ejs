@@ -3,14 +3,16 @@
         <label>Name*</label>
         <input type="text" name="name" value="<%= object.name %>">
     </div>
-    <div class="form-item">
+    <!-- <div class="form-item">
         <label>Description</label>
         <textarea name="description"><%= object.description %></textarea>
     </div>
     <div class="form-item form-item-no-grow">
         <label>Cover</label>
         <input type="file" name="cover" class="image-cover filepond">
-    </div>
+    </div> -->
+    <input style="display: none;" type="text" id="chart" name="chart" value="<%= object.chart %>">
+    <input style="display: none;" type="text" id="annotations" name="annotations" value="<%= object.annotations %>">
 </div>
 <!-- <div class="form-row">
     <div class="form-item form-item-no-grow">
@@ -29,3 +31,371 @@
     </div>
 </div>
 <input type="text" name="type" value="basic" style="display: none;"> -->
+
+<canvas height="200px" id="myChart"></canvas>
+
+<script>
+    var chartData = null;
+    if(document.getElementById('chart').value != null && document.getElementById('chart').value != ""){
+      chartData = JSON.parse(document.getElementById('chart').value);
+    }
+
+    var chartAnnotations = null;
+    if(document.getElementById('annotations').value != null && document.getElementById('annotations').value != ""){
+        chartAnnotations = JSON.parse(document.getElementById('annotations').value);
+    }
+
+    class TreeNode {
+        constructor(value) {
+            this.value = value;
+            this.descendants = [];
+        }
+    }
+
+    function formatLabel(str, maxwidth){
+        var sections = [];
+        var words = str.split(" ");
+        var temp = "";
+
+        words.forEach(function(item, index){
+            if(temp.length > 0)
+            {
+            var concat = temp + ' ' + item;
+
+            if(concat.length > maxwidth){
+                sections.push(temp);
+                temp = "";
+            }
+            else{
+                if(index == (words.length-1)) {
+                sections.push(concat);
+                return;
+                }
+                else {
+                temp = concat;
+                return;
+                }
+            }
+            }
+
+            if(index == (words.length-1)) {
+            sections.push(item);
+            return;
+            }
+
+            if(item.length < maxwidth) {
+            temp = item;
+            }
+            else {
+            sections.push(item);
+            }
+
+        });
+
+        return sections;
+    }
+
+    function arrayInArray(array, item) {
+        for (var i = 0; i < array.length; i++) {
+            // This if statement depends on the format of your array
+            if (array[i][0] == item[0] && array[i][1] == item[1]) {
+                return i;   // Found it
+            }
+        }
+        return -1;   // Not found
+    }
+
+    let element;
+    let lastEvent;
+
+    function enter(ctx) {
+        element = ctx.element;
+        // console.log(ctx.element);
+        console.log(element.options.content + ' entered');
+        if (!count) {
+            chart1.canvas.style.cursor = 'pointer';
+        }
+        count++;
+    }
+
+    function leave(ctx) {
+        console.log(element.options.content + ' left');
+        count--;
+        if (!count) {
+            chart1.canvas.style.cursor = 'default';
+        }
+        element = undefined;
+        lastEvent = undefined;
+    }
+
+    function select(ctx, selectedColor, unselectedColor) {
+        console.log(ctx);
+        element = ctx.element;
+        let input = document.getElementById('whyAndHowInput');
+        // console.log(element);
+        // console.log(element.options.content + ' selected');
+        if (selected.includes(ctx)) {
+            input.value = " ";
+            for(let i = 0; i < annotations.length; i++){
+                if(annotations[i].content == selected[0].element.options.content){
+                    annotations[i].backgroundColor = unselectedColor;
+                    // annotations[i].font.size = 12;
+                }
+            }
+            console.log(element.options.content + ' unselected');
+            selected.splice(selected.indexOf(element), 1);
+            element.options.backgroundColor = unselectedColor;
+            element.options.font.size = 12;
+            // input.blur();
+        } else {
+            if(selected.length > 0){
+                for(let i = 0; i < selected.length; i++){
+                    select(selected[i], selected[i].element.options.backgroundColor, 'light' + selected[i].element.options.backgroundColor);
+                }
+            }
+            element = ctx.element;
+            input.value = element.options.content;
+            console.log(element.options.content + ' selected');
+            selected.push(ctx);
+            element.options.backgroundColor = selectedColor;
+            element.options.font.size = 14;
+            for(let i = 0; i < annotations.length; i++){
+                if(annotations[i].content == selected[0].element.options.content){
+                    annotations[i].backgroundColor = selectedColor;
+                    // annotations[i].font.size = 14;
+                }
+            }
+            // input.focus();
+        }
+        // chart.value = JSON.stringify(chart1.data);
+        // annot.value = JSON.stringify(annotations);
+        
+        chart1.update();
+        return true;
+    }
+
+    function deselect() {
+        if(selected.length > 0){
+            for(let i = 0; i < selected.length; i++){
+                select(selected[i], selected[i].element.options.backgroundColor, 'light' + selected[i].element.options.backgroundColor);
+            }
+        }
+        // element = ctx.element;
+        // input.value = element.options.content;
+        // console.log(element.options.content + ' selected');
+        // selected.push(ctx);
+        // element.options.backgroundColor = selectedColor;
+        // element.options.font.size = 14;
+        // for(let i = 0; i < annotations.length; i++){
+        //     if(annotations[i].content == selected[0].element.options.content){
+        //         annotations[i].backgroundColor = selectedColor;
+        //         // annotations[i].font.size = 14;
+        //     }
+        // }
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function changeText(){
+        let input = document.getElementById('whyAndHowInput').value;
+        if(selected.length > 0){
+            // selected[0].options.content = formatLabel(" " + input , 30);
+            // console.log()
+            // element = ctx.element;
+            // element = selected[0]
+            // console.log(annotations[0]);
+            // console.log(selected[0]);
+            for(let i = 0; i < annotations.length; i++){
+                if(annotations[i].content == selected[0].element.options.content){
+                    annotations[i].content = formatLabel(" " + input , 30);
+                }
+            }
+            chart1.update();
+        }
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    var chart = document.getElementById('chart');
+    var annot= document.getElementById('annotations');
+    let colors = ['red', 'lightblue', 'yellow', 'lightgreen', 'mediumpurple', 'orange'];
+
+    let start = {
+        type: 'label',
+        backgroundColor: 'lightyellow',
+        borderWidth: 2,
+        borderColor: 'black',
+        click: (ctx) => select(ctx, 'yellow', 'lightyellow'),
+        // radius: 50,
+        xValue: 0,
+        yValue: 30,
+        content: ['Start'],
+        callout: {
+            display: true,
+            borderColor: 'black',
+        },
+        drawTime: 'afterDraw'
+    }
+    const startNode = new TreeNode(start);
+
+    let annotations;
+    if (chartAnnotations != null){
+        // console.log(chartAnnotations);
+        annotations = chartAnnotations;
+    } else {
+        annotations = [ startNode.value ];
+        // console.log(annotations);
+    }
+    annot.value = JSON.stringify(annotations);
+
+    let count = 0;
+    const selected = [];
+
+    let chart1Data;
+    if (chartData != null){
+        // console.log(chartData);
+        chart1Data = chartData;
+    } else {
+        chart1Data = {
+            labels: ['1'],
+            datasets: [{type: 'bar', label: '', hidden: true} ,
+            { 
+                type: 'line',
+                label: 'Example',
+                data: [annotations[0].yValue],
+                borderWidth: 10,
+                tension: .4,
+            }
+        ]}
+    }
+
+    let ctx = document.getElementById('myChart');
+    console.log(ctx.element);
+    let chart1 = new Chart(ctx, {
+        type: 'line',
+        data: chart1Data,
+        options: {
+            // events: ['mousedown', 'mouseup', 'mousemove', 'mouseout'],
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    // display: false
+                    display: true
+                },
+                annotation: {
+                    enter: (ctx) => enter(ctx),
+                    leave: (ctx) => leave(ctx),
+                    click: (ctx) => select(ctx, ctx.element.options.backgroundColor.substring(5), 'light' + ctx.element.options.backgroundColor),
+                    common: {
+                        drawTime: 'beforeDraw'
+                    },
+                    annotations
+                },
+                tooltip: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: false,
+                        text: "Enter Construct"
+                    },
+                    ticks: {
+                        // display: false
+                        display: true
+                    },
+                    grid: {
+                        // display: false
+                        display: true
+                    },
+                    beginAtZero: true,
+                    display: true,
+                    suggestedMin: 0,
+                    suggestedMax: 100
+                },
+                x: {
+                    position: 'top',
+                    ticks: {
+                        // display: false
+                        display: true
+                    },
+                    grid: {
+                        // display: false 
+                        display: true
+                    }
+                }
+            }
+        }
+        });
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+
+    function addLabel() {
+        chart1.data.labels.push(chart1.data.labels.length + 1);
+    }
+
+    function addWhy() {
+        let ann = {
+            type: 'label',
+            backgroundColor: 'lightgreen',
+            borderWidth: 2,
+            borderColor: 'black',
+            click: (ctx) => select(ctx, 'green', 'lightgreen'),
+            // radius: 50,
+            xValue: chart1.data.labels.length,
+            yValue: annotations[chart1.data.labels.length-1].yValue + 50,
+            content: ['Annotation' + chart1.data.labels.length],
+            callout: {
+                display: true,
+                borderColor: 'black',
+            },
+            drawTime: 'afterDraw'
+        }
+        annotations.push(ann);
+        addLabel();
+        chart1.data.datasets[1].data.push(ann.yValue);
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function addHow() {
+        let ann = {
+            type: 'label',
+            backgroundColor: 'lightgray',
+            borderWidth: 2,
+            borderColor: 'black',
+            click: (ctx) => select(ctx, 'gray', 'lightgray'),
+            // radius: 50,
+            xValue: chart1.data.labels.length,
+            yValue: annotations[chart1.data.labels.length-1].yValue - 50,
+            content: ['Annotation' + chart1.data.labels.length],
+            callout: {
+                display: true,
+                borderColor: 'black',
+            },
+            drawTime: 'afterDraw'
+        }
+        annotations.push(ann);
+        addLabel();
+        chart1.data.datasets[1].data.push(ann.yValue);
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+</script>
+
+<div class="form-row">
+    <div class="form-item">
+        <div id="addwhy">
+            <button class="btn btn-secondary" type="button" onclick="addWhy()">Add Why?</button>
+            <button class="btn btn-secondary" type="button" onclick="addHow()">Add How?</button> 
+        </div>
+    </div>
+    <div class="form-item">
+        <input type="text" name="whyAndHowInput" id="whyAndHowInput"  oninput="changeText()" onblur="deselect()">
+    </div>
+</div>

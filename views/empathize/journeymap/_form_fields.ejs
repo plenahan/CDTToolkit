@@ -2,16 +2,680 @@
     <div class="form-item">
         <label>Name*</label>
         <input type="text" name="name" value="<%= object.name %>">
+        
     </div>
     <div class="form-item">
+        <label>Construct</label>
+        <input type="text" name="construct" id="construct" value="<%= object.construct %>" oninput="setConstuct()">
+        <!-- <div><button class="btn btn-secondary" type="button" onclick="setConstuct()">Set Construct</button></div> -->
+    </div>
+    <!-- <div class="form-item">
         <label>Description</label>
-        <textarea name="description"><%= object.description %></textarea>
+        <textarea name="description"><= object.description %></textarea>
     </div>
     <div class="form-item form-item-no-grow">
         <label>Cover</label>
         <input type="file" name="cover" class="image-cover filepond">
-    </div>
+    </div> -->
+    <input style="display: none;" type="text" id="chart" name="chart" value="<%= object.chart %>">
+    <input style="display: none;" type="text" id="annotations" name="annotations" value="<%= object.annotations %>">
 </div>
+<div style="display: flex;">
+    <canvas id="myChart"></canvas>
+        <input orient="vertical" oninput="changeRed()" type="range" min="0" max="100" value="50" class="slider" id="val">
+  </div>
+ 
+    <button type="button" class="btn btn-secondary" onclick="randomize()">Randomize</button>
+
+  
+  <script>
+    var chartData = null;
+    if(document.getElementById('chart').value != null && document.getElementById('chart').value != ""){
+      chartData = JSON.parse(document.getElementById('chart').value);
+    }
+
+    var chartAnnotations = null;
+    if(document.getElementById('annotations').value != null && document.getElementById('annotations').value != ""){
+        chartAnnotations = JSON.parse(document.getElementById('annotations').value);
+    }
+     
+    var chartConstruct = document.getElementById('construct').value;
+
+    function formatLabel(str, maxwidth){
+    var sections = [];
+    var words = str.split(" ");
+    var temp = "";
+
+    words.forEach(function(item, index){
+        if(temp.length > 0)
+        {
+        var concat = temp + ' ' + item;
+
+        if(concat.length > maxwidth){
+            sections.push(temp);
+            temp = "";
+        }
+        else{
+            if(index == (words.length-1)) {
+            sections.push(concat);
+            return;
+            }
+            else {
+            temp = concat;
+            return;
+            }
+        }
+        }
+
+        if(index == (words.length-1)) {
+        sections.push(item);
+        return;
+        }
+
+        if(item.length < maxwidth) {
+        temp = item;
+        }
+        else {
+        sections.push(item);
+        }
+
+    });
+
+    return sections;
+    }
+
+    function arrayInArray(array, item) {
+        for (var i = 0; i < array.length; i++) {
+            // This if statement depends on the format of your array
+            if (array[i][0] == item[0] && array[i][1] == item[1]) {
+                return i;   // Found it
+            }
+        }
+        return -1;   // Not found
+    }
+    function setConstuct() {
+        let val = document.getElementById('construct').value;
+        chart1.options.scales.y.title.text = val;
+        chart1.update();
+    }
+
+    var chart = document.getElementById('chart');
+    var annot= document.getElementById('annotations');
+    let colors = ['red', 'lightblue', 'yellow', 'lightgreen', 'mediumpurple', 'orange'];
+    let data = [];
+
+
+    function randomize() {
+        let num;
+        let j = 0;
+        chart1.data.datasets.forEach(dataset => {
+            data = [];
+            for(let i = 0; i < chart1.data.labels.length; i++){
+                num = Math.random() * 100;
+                data.push(num);
+                updateAnnotation(i, j, num);
+            }
+            dataset.data = data;
+            j++;
+        });
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function addDataset() {
+        let name = document.getElementById('datasetName').value;
+        let val = document.getElementById('val').value;
+        const data = [];
+        for(let i = 0; i < chart1.data.labels.length; i++){
+            data.push(Math.random() * 100);
+        }
+        let color = document.getElementById('datasetColor').value
+        const newDataset = {
+            label: name,
+            backgroundColor: colors[color],
+            borderColor: colors[color],
+            data: data,
+            borderWidth: 10,
+            tension: .4,
+        }
+        chart1.data.datasets.push(newDataset);
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function addData() {
+        let label = document.getElementById('dataName').value;
+        let longLabel = formatLabel(label, 20)
+        let val = document.getElementById('val').value;
+        const data = chart1.data;
+        // if (data.datasets.length > 0) {
+            data.labels.push(longLabel);
+        for (let index = 0; index < data.datasets.length; ++index) {
+          data.datasets[index].data.push(val);
+        }
+
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+        var events = document.getElementById('events');
+        var option = document.createElement("option");
+        option.text = label;
+        option.id = label;
+        option.value = label;
+        option.selected = true;
+        events.appendChild(option);
+        // }
+    }
+
+    function removeDataset() {
+        let name = document.getElementById('datasetName').value;
+        for(let i = 0; i < chart1.data.datasets.length; i++){
+            if(chart1.data.datasets[i].label == name){
+                deleteAnnotationByDataset(i);
+                chart1.data.datasets.splice(i, 1);
+            }
+        }
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function removeData(){
+        // let label = document.getElementById('dataName').value;
+        let sel = document.getElementById('events')
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        
+        // console.log(label);
+        // console.log(chart1.data.labels)
+        let index = chart1.data.labels.indexOf(label);
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        // console.log(label == chart1.data.labels[4]);
+        if(index != -1){
+            deleteAnnotationByEvent(index);
+            chart1.data.labels.splice(index, 1);
+            chart1.data.datasets.forEach(dataset => {
+                dataset.data.splice(index, 1);
+            })
+            
+            chart1.update();
+            chart.value = JSON.stringify(chart1.data);
+            annot.value = JSON.stringify(annotations);
+            let op = document.getElementById(label);
+            sel.removeChild(op);
+        }
+        
+    }
+
+    function editEvent() {
+        let sel = document.getElementById('events');
+        let label = document.getElementById('events').value;
+        let val = document.getElementById('editEvent').value;
+        let longLabel = formatLabel(label, 20);
+        
+        // console.log(label);
+        // console.log(chart1.data.labels)
+        let index = chart1.data.labels.indexOf(label);
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        // console.log(label == chart1.data.labels[4]);
+        if(index != -1){
+            chart1.data.labels[index] = val;
+            chart1.update();
+            chart.value = JSON.stringify(chart1.data);
+            annot.value = JSON.stringify(annotations);
+            let op = document.getElementById(label);
+            op.text = label;
+            op.id = label;
+            op.value = label;
+            op.selected = true;
+        }
+    }
+
+    let element;
+    let lastEvent;
+
+    function drag(moveX, moveY) {
+    element.x += moveX;
+    element.y += moveY;
+    element.x2 += moveX;
+    element.y2 += moveY;
+    element.centerX += moveX;
+    element.centerY += moveY;
+    if (element.elements && element.elements.length) {
+        for (const subEl of element.elements) {
+        subEl.x += moveX;
+        subEl.y += moveY;
+        subEl.x2 += moveX;
+        subEl.y2 += moveY;
+        subEl.centerX += moveX;
+        subEl.centerY += moveY;
+        subEl.bX += moveX;
+        subEl.bY += moveY;
+        }
+    }
+    };
+
+function handleElementDragging(event) {
+  if (!lastEvent || !element) {
+    return;
+  }
+  const moveX = event.x - lastEvent.x;
+  const moveY = event.y - lastEvent.y;
+  drag(moveX, moveY);
+  lastEvent = event;
+  return true;
+};
+
+function handleDrag(event) {
+  if (element) {
+    switch (event.type) {
+    case 'mousemove':
+      return handleElementDragging(event);
+    case 'mouseout':
+    case 'mouseup':
+      lastEvent = undefined;
+      break;
+    case 'mousedown':
+      lastEvent = event;
+      break;
+    default:
+    }
+  }
+};
+
+    const dragger = {
+        id: 'dragger',
+        beforeEvent(chart, args, options) {
+            if (handleDrag(args.event)) {
+            args.changed = true;
+            return;
+            }
+        }
+    };
+
+    
+
+    const annotation2 = {
+        type: 'label',
+        backgroundColor: 'rgba(255, 99, 132, 0.25)',
+        borderWidth: 3,
+        borderColor: 'black',
+        content: ['Label annotation', 'to drag'],
+        callout: {
+            display: true,
+            borderColor: 'black',
+        },
+        xValue: 0,
+        yValue: 40
+    };
+    let midline = 
+        {
+            type: 'line',
+            borderColor: 'gray',
+            borderWidth: 3,
+            scaleID: 'y',
+            value: 50,
+            borderDash: [10, 5],
+        }
+    let annotations;
+    if (chartAnnotations != null){
+        annotations = chartAnnotations;
+    } else {
+        annotations = [ midline ];
+    }
+    annot.value = JSON.stringify(annotations);
+    // annotations.addData
+
+    function createAnnotation() {
+        let name = document.getElementById('datasetName').value;
+        let event = document.getElementById('events').value;
+        let otherEvent = formatLabel(event, 20);
+        let color;
+        let x;
+        let y;
+        console.log(event)
+        console.log(otherEvent)
+        for(let i = 0; i < chart1.data.labels.length; i++){
+            console.log(chart1.data.labels[i])
+            if(chart1.data.labels[i] == event || arrayInArray(chart1.data.labels, otherEvent) == i){
+                x = i;
+            }
+        }
+        for(let i = 0; i < chart1.data.datasets.length; i++){
+            if(chart1.data.datasets[i].label == name){
+                color = chart1.data.datasets[i].backgroundColor;
+                y = chart1.data.datasets[i].data[x];
+            }
+        }
+        annotations.push({
+            type: 'label',
+            backgroundColor: color,
+            borderWidth: 3,
+            content: [name, 'input'],
+            callout: {
+                display: true,
+                borderColor: 'black',
+            },
+            xValue: x,
+            yValue: y
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function updateAnnotation(index, i, val) {
+        annotations.forEach(annotation => {
+            if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                annotation.yValue = val;
+            }
+        })
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+    }
+    
+    function editAnnotationText() {
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        let val = document.getElementById('annotation').value;
+        
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    annotations.forEach(annotation => {
+                        if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                            annotation.content = formatLabel(val, 40);
+                        }
+                    })
+                    chart1.update();
+                }
+            }
+        }
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function deleteAnnotation() {
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        let val = document.getElementById('annotation').value;
+        let j = 0;
+        
+        if(index == -1){
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    annotations.forEach(annotation => {
+                        if(annotation.xValue == index && annotation.yValue == chart1.data.datasets[i].data[index]){
+                            annotations.splice(j, 1)
+                        }
+                        j++;
+                    })
+                    chart1.update();
+                }
+            }
+        }
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function deleteAnnotationByDataset(datasetIndex){
+        let j = 0;
+        for(let i = 0; i < chart1.data.datasets[datasetIndex].data.length; i++){
+            annotations.forEach(annotation => {
+                if(annotation.yValue == chart1.data.datasets[datasetIndex].data[i]){
+                    annotations.splice(j, 1);
+                    j--;
+                }
+                j++;
+            })
+            j = 0;
+        }
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function deleteAnnotationByEvent(index) {
+        let j = 0;
+        for(let i = 0 ; i < annotations.length; i++){
+            if(annotations[i].xValue == index){
+                annotations.splice(i, 1);
+                i--;
+            }
+            else if(annotations[i].xValue > index){
+                annotations[i].xValue--;
+            }
+        }
+        chart1.update();
+        annot.value = JSON.stringify(annotations);
+    }
+    let chart1Data;
+    if (chartData != null){
+        console.log(chartData);
+        chart1Data = chartData;
+    } else {
+        chart1Data = {
+            labels: ['Event 1', 'Event 2', 'Event 3', 'Event 4'],
+            datasets: [{type: 'bar', label: '', hidden: true} ,
+            { 
+                type: 'line',
+                label: 'Example',
+                data: [Math.random() * 100, Math.random() * 100, Math.random() * 100, Math.random() * 100],
+                borderWidth: 10,
+                tension: .4,
+            }],
+        }
+    }
+    let constructText;
+    if(chartConstruct != null && chartConstruct != ""){
+        constructText = chartConstruct;
+    } else {
+        constructText = 'Enter Construct';
+    }
+
+    let ctx = document.getElementById('myChart');
+    // console.log(ctx.element);
+    let chart1 = new Chart(ctx, {
+        type: 'line',
+        plugins: [dragger],
+        data: chart1Data,
+        options: {
+            events: ['mousedown', 'mouseup', 'mousemove', 'mouseout'],
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                annotation: {
+                    enter(ctx) {
+                    element = ctx.element;
+                    console.log(element);
+                    },
+                    leave() {
+                    element = undefined;
+                    lastEvent = undefined;
+                    },
+                    annotations
+                }
+            },
+            scales: {
+                y: {
+                    title: {
+                        display: true,
+                        text: constructText
+                    },
+                    ticks: {
+                        display: false
+                    },
+                    grid: {
+                        display: false
+                    },
+                    beginAtZero: true,
+                    display: true,
+                    min: 0,
+                    max: 100
+                },
+                x: {
+                    position: 'top'
+                }
+            }
+        }
+        });
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+
+    function changeRed(){
+        let val = document.getElementById('val').value;
+        // chart1.data.datasets[0].data[0] = val;
+        let name = document.getElementById('datasetName').value;
+        let label = document.getElementById('events').value;
+        let longLabel = formatLabel(label, 20);
+        let index = chart1.data.labels.indexOf(label);
+        // let index = arrayInArray(chart1.data.labels, label);
+        // console.log(chart1.data.labels[0].toString());
+        // console.log("first index:" + index);
+        if(index == -1){
+            // console.log("chart1.data.labels: " + chart1.data.labels);
+            // console.log("longLabel: " + longLabel);
+            // console.log(label == chart1.data.labels[0].toString());
+            index = arrayInArray(chart1.data.labels, longLabel);
+        }
+        if(index == -1){
+            for(let i = 0; i < chart1.data.labels.length; i++){
+                if(label == chart1.data.labels[i].toString()){
+                    index = i;
+                }
+            }
+        }
+        // console.log("second index:" + index);
+        if(index != -1){
+            for(let i = 0; i < chart1.data.datasets.length; i++){
+                if(chart1.data.datasets[i].label == name){
+                    updateAnnotation(index, i, val);
+                    chart1.data.datasets[i].data[index] = val;
+                }
+            }
+        }
+        chart1.update();
+        chart.value = JSON.stringify(chart1.data);
+        annot.value = JSON.stringify(annotations);
+    }
+
+    function changeColor() {
+        let color = document.getElementById('datasetColor').value;
+        let sel = document.getElementById('datasetColor')
+        sel.style.backgroundColor = colors[color];
+    }
+  </script>
+  <!-- <div class="slidecontainer"> -->
+    <!-- <input orient="vertical" oninput="changeRed()" type="range" min="0" max="100" value="50" class="slider" id="val"> -->
+  <!-- </div> -->
+
+  <div class="form-row">
+    <div class="form-item">
+        <label>Edit Annotation</label>
+        <input style="max-width: 100%;" id="annotation" type="text" oninput="editAnnotationText()">
+        <div><button class="btn btn-secondary" type="button" onclick="createAnnotation()">Create Annotation</button>
+            <button class="btn btn-danger" type="button" onclick="deleteAnnotation()">Delete Annotation</button></div>
+        <label>Add/Select Persona</label>
+        <div>
+            
+            <select style="width: 90%;" name="datasetName" id="datasetName">
+                <option value="Example">Example</option>
+                <% personas.forEach(persona => { %>
+                    <option value="<%= persona.name %>"><%= persona.name %></option>
+                <% }) %>
+            </select>
+            <select style="width: 9%;" name="datasetColor" id="datasetColor" oninput="changeColor()">
+                <option selected style="background-color: red;" value="0"></option>
+                <option style="background-color: lightblue;" value="1"></option>
+                <option style="background-color: yellow;" value="2"></option>
+                <option style="background-color: lightgreen;" value="3"></option>
+                <option style="background-color: mediumpurple;" value="4"></option>
+                <option style="background-color: orange;" value="5"></option>
+            </select>
+        </div>
+        <div><button class="btn btn-secondary" type="button" onclick="addDataset()">Add Persona</button>
+            <button class="btn btn-danger" type="button" onclick="removeDataset()">Remove Persona</button></div>
+            
+        
+    </div>
+    <div style="max-width: 48%;" class="form-item">
+        <label>Select Event</label>
+        <select style="max-width: 100%;" name="events" id="events">
+
+        </select>
+
+        <label>Add Event</label>
+        <input style="max-width: 100%;" id="dataName" type="text">
+        
+        <div><button class="btn btn-secondary" type="button" onclick="addData()">Add Event</button>
+            <button class="btn btn-danger" type="button" onclick="removeData()">Remove Event</button></div>
+            <label>Edit Event</label>
+            <input style="max-width: 100%;" id="editEvent" type="text" oninput="editEvent()">
+    </div>
+  </div>
+
+
+  <script>
+    var events = document.getElementById('events');
+    for(let i = 0; i < chart1.data.labels.length; i++){
+        var option = document.createElement("option");
+        option.text = chart1.data.labels[i];
+        option.id = chart1.data.labels[i];
+        option.value = chart1.data.labels[i];
+        events.appendChild(option);
+    }
+    </script>
+    <style>
+        .slidecontainer {
+            width: 100%; /* Width of the outside container */
+            }
+        
+            .slider {
+            -webkit-appearance: none;
+            appearance: none;
+            
+            
+            border-radius: 5px;  
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            }
+
+            .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%; 
+            background: #0578a9;
+            cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #0578a9;
+            cursor: pointer;
+            }
+    </style>
+  <!-- <input id="datasetName" type="text"> -->
+  
+
 <!-- <div class="form-row">
     <div class="form-item form-item-no-grow">
         <label>Cover</label>

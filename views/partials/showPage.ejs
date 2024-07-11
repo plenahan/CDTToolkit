@@ -4,25 +4,29 @@
 <h2 class="page-header"><%= creation.name %></h2>
 <div class="image-details">
     
-    <div>
+    <div></div>
         <img width="350px" src="<%= creation.coverImagePath %>">
         <!-- < if(persona.user.id == user) { %> -->
         <!-- < } %> -->
     </div>
     
-    <div class="image-details-grid">
+    
         <%- include(`../${tool.stage}/${tool.folder}/show`) %>
     </div>
+    </div>
+</div>
+</div>
 </div>
 <% } %>
 <% if(creation.coverImagePath == null) { %>
+  <% if(creation.pdf == null) { %>
     <h2 class="page-header"><%= creation.name %></h2>
-    <div class="image-details">
         <%- include(`../${tool.stage}/${tool.folder}/show`) %>
-    </div>
-    <!-- < if(persona.user.id == user) { %> -->
+    <% } %>
+    <% if(creation.pdf != null) { %>
+      <%- include('./pdfShow') %>
+  <% } %>
 
-        <!-- < } %> -->
 <% } %>
 <% if (comments.length > 0) { %>
     <h2>Comments</h2>

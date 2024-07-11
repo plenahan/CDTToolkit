@@ -13,13 +13,17 @@ function ready() {
     FilePond.registerPlugin(
         FilePondPluginImagePreview,
         FilePondPluginImageResize,
-        FilePondPluginFileEncode
+        FilePondPluginFileEncode,
+        // FilePondPluginPdfPreview
     )
 
     FilePond.setOptions({
         stylePanelAspectRatio: 1 / coverAspectRatio,
         imageResizeTargetWidth: coverWidth,
-        imageResizeTargetHeight: coverHeight
+        imageResizeTargetHeight: coverHeight,
+        // allowPdfPreview: true,
+        // pdfPreviewHeight: 455,
+        // pdfComponentExtraParams: 'toolbar=0&view=fit&page=1'
     })
 
     FilePond.parse(document.body)
