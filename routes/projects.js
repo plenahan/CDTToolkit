@@ -222,6 +222,7 @@ router.put('/:id', async (req, res) => {
         project.users = req.body.users
         project.teams = req.body.teams
         var teamprojects = await TeamProject.find({ project: project })
+        // console.log(project.teams);
         if(project.teams){
             project.teams.forEach(async team =>{
                 if((await TeamProject.find({ team: team, project: project })).length == 0){
@@ -239,7 +240,8 @@ router.put('/:id', async (req, res) => {
         }
         await project.save()
         res.redirect(`/projects/${project.id}`)
-    } catch {
+    } catch(err) {
+        console.log(err);
         res.redirect('/')
     }
 })
