@@ -81,32 +81,88 @@ On the Empathize page, you will see the 3 empathize tools: Empathy Maps, Journey
       - The slider on the right of the journey map is used to change the path for each persona for each event. To do this, select the persona you want to change using the 'Add/Select Persona' dropdown and select the event you want to change the persona at using the 'Select Event' dropdown. Then move the slider up and down to move the point on the path (NOTE: The slider seems to appear differently on different browsers. On Firefox, the slider is vertical and is able to slide up and down, however, on Chrome the slider is horizontal and slides left and right, which looks and operates much worse. Keep this in mind when using on Chrome.). Do this for each event and personas to create your map.
       - You can create annotations for each point on the paths to make notes about why you put the point where you did. To create an annotation, select the persona you want to add an annotation for using the 'Add/Select Persona' dropdown and select the event you want to add an annotation at using the 'Select Event' dropdown and click 'Create Annotation'. The annotation will appear with default text. To change the text, select the annotation the same way you did when you added it and type in the 'Edit Annotation' field. The annotation text will update as you input text. To delete an annotation, select it the same way you did before and click 'Delete Annotation'.
       - Click 'Create' to create your journey map or 'Cancel' to go back to the tool page.
-- [Personas](http://cdttoolkit.ece.iastate.edu/personas): The personas page follows the general tool page template.
+- [Personas](http://cdttoolkit.ece.iastate.edu/personas): The personas page follows the general tool page template. Personas can be used in other tools like Journey Maps.
    - [Creating a new persona](http://cdttoolkit.ece.iastate.edu/personas/new): A persona is used to imagine what certain types of students are like. You can use them as the base of other tools. There are three types of personas you can create. To select the type of persona you want to create, select an option from the 'Persona Type' dropdown. The fields will be updated for that type of persona.
-      - Creating a Goal Directed Persona:
-      - Creating a Simple Persona:
-      - Creating a Custom Persona:
+      - Creating a Goal Directed Persona: The goal behind a Goal Directed Persona is to understand the desires and motivations of your types of students.
+         - First, you can give your Persona a name by inputting into the 'Name' field.
+         - Then, you can optionally give your Perona a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+         - Then, you can fill out the 3 main fields of a Goal Directed Persona. To describe who the Persona wants to be, input into the 'Who they want to be:' field. To describe what the persona wants to do, input into the 'what they want to do:' field. To describe how they want to feel, input into the 'How they want to feel:' field.
+         - Click 'Create' to create your persona or 'Cancel' to go back to the tool page.
+      - Creating a Simple Persona: The goal of a simple persona is to better understand the characteristics of your students.
+         - First, you can give your Persona a name by inputting into the 'Name' field.
+         - Then, you can optionally give your Perona a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+         - You can describe your persona's background & demographic by inputting into 'Background & Demographic'.
+         - You can input the persona's hobbies and interests by clicking the '+' under 'Hobbies & Interests'. This will add an input field and a red 'X' below the '+'. You can add up to 10 input fields. Enter the persona's hobbies and interests into these fields. To remove an input, click the red 'X' under the input. Use this process to add the persona's 'Roles & Functions', 'Personalities & Emotions', and 'Values & Goals'.
+         - Click 'Create' to create your persona or 'Cancel' to go back to the tool page.
+      - Creating a Custom Persona: The goal of a custom persona is to give the user the freedom to create their own type of persona.
+         - First, you can give your Persona a name by inputting into the 'Name' field.
+         - Then, you can optionally give your Perona a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+         - To add a shorter input, click the '+' next to 'Line Input'. A 'Label' input and an 'Input' input will appear below. You can add your field label to the 'Label' and your response to the 'Input'. You can add up to 10 of these fields. Click the red 'X' next to the input if you want to delete it. If you want a bigger response, you can follow this process for the 'Textarea'.
+         - Click 'Create' to create your persona or 'Cancel' to go back to the tool page.
 
 ### [Define](http://cdttoolkit.ece.iastate.edu/define)
 
 On the Define page, you will see the 3 define tools: Need Statements, Abstraction Ladders, and Rocks. Click the respective 'Call to action' link to navigate to that tools page. You can also click the 'Empathize' button to the left of 'Define' to go back to [Empathize](#empathize) or the 'Ideate' button to the right of 'Define' to go to [Ideate](#ideate).
+
+- [Need Statements](): The need statements page follows the general tool page template. The goal of a need statement is to define what a student needs in a concise, simple statement.
+   - [Creating a Need Statement](): The structure of a need statement is the following: [User] needs (a way) to [Do Something] because [Insight about User]. Fill in each input to create your need statement. Click 'Create' to create your need statement or 'Cancel' to go back to the tool page.
+- [Abstraction Ladders](): The abstraction ladders page follows the general tool page template. The goal of an abstraction ladder is to state a problem, why it's a problem, and how to solve it.
+   - [Creating an Abstraction Ladder](): The abstraction ladder starts with one problem. The abstraction ladder will then go up and down to describe why that's a problem and how it's going to be solved.
+      - First, you can give your abstraction ladder a name by inputting into the 'Name' field.
+      - The abstraction ladder will start with one block named 'Start'. To change the text of this block and define your problem, click on the block and type in the field below the abstraction ladder. The block text will update as you type.
+      - To explain why, click the 'Add Why?' button. A new block will appear to the top right of the last block. You can change the text the same way you did for the starting block.
+      - To explain how, click the 'Add How?' button. A new block will appear to the bottom right of the last block. You can change the text the same way you did for the starting block.
+      - You can add as many whys and hows as you'd like.
+      - Click 'Create' to create your abstraction ladder or 'Cancel' to go back to the tool page.
+- [Rocks](): The rocks page follows the general tool page template. The goal of rocks is to determine the importance of tasks and problems/improvements.
+   - [Creating Rocks](): To create a rock, give it a name by inputting into the 'Name' field and a description into the 'Description' field. You can also give it a cover by clicking 'Browse' and uploading an image. Then, give the rock a size (level of importance/priority). Click 'Create' to create your rock or 'Cancel' to go back to the tool page.
 
 
 ### [Ideate](http://cdttoolkit.ece.iastate.edu/ideate)
 
 On the Ideate page, you will see the 2 ideate tools: Lotus Blossoms and Brainstorms. Click the respective 'Call to action' link to navigate to that tools page. You can also click the 'Define' button to the left of 'Ideate' to go back to [Define](#define) or the 'Prototype' button to the right of 'Ideate' to go to [Prototype](#prototype).
 
+- [Lotus Blossoms](): The lotus blossoms page follows the general tool page template. The goal of a lotus blossom is to create ideas by building off of a central idea.
+   - [Creating a Lotus Blossom](): The lotus blossom starts with one block named 'Key Idea' in the center. This is the main idea you're building around.
+      - First, you can give your lotus blossom a name by inputting into the 'Name' field.
+      - Then, you can input your 'Key Idea' by typing in the input field below the lotus blossom. The key idea block text will change as you type.
+      - To build off of your key idea, click the 'Create Annotation' button just above the input field. This will add a blossom to the left of the key idea, and add a new button, dropdown menu, and text input to the below the new blossom at the bottom of the lotus blossom. You can add up to 6 blossoms off of the key idea, 3 to the left, and 3 to the right.
+      - Then, you can build off of these blossoms and create 2nd level blossoms. You can select you blossoms for the left and right side by using the dropdown menus that appeared. Once you select a blossom, clicking the corresponding 'Create Annotation' will create a second level blossom. You can follow this process for 3rd level blossoms as well. You can have 3 2nd level blossoms per blossom, and 2 3rd level blossoms per 2nd level blossom.
+      - You can change the text of any blossom by selecting it with the dropdown by its text, then inputting into the corresponding input field.
+      - Click 'Create' to create your lotus blossom or 'Cancel' to go back to the tool page.
+- [Brainstorms](): The brainstorms page follows the general tool page template. The goal of a brainstorm is to generate many ideas in one session.
+   - [Creating a Brainstorm]():
+      - First, you can give your brainstorm a name by inputting into the 'Name' field.
+      - Then, you can optionally give your brainstorm a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+      - Then, in the 'Ideas' input field, you can list your ideas.
+      - Click 'Create' to create your brainstorm or 'Cancel' to go back to the tool page.
 
 ### [Prototype](http://cdttoolkit.ece.iastate.edu/prototype)
 
 On the Prototype page, you will see the 1 prototype tool: Prototype. Click the respective 'Call to action' link to navigate to that tool page. You can also click the 'Ideate' button to the left of 'Prototype' to go back to [Ideate](#ideate) or the 'Test' button to the right of 'Prototype' to go to [Test](#test).
 
+- [Prototypes](): The prototypes page follows the general tool page template. The goal of a prototype is to form a real thing based on your ideas.
+   - [Creating a Prototype](): This tool is mostly incomplete, with not a lot of unique features. However you can still upload a PDF to store your prototype.
+      - First, you can give your prototype a name by inputting into the 'Name' field.
+      - Then, you can describe your prototype by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+      - Click 'Create' to create your prototype or 'Cancel' to go back to the tool page.
+
 ### [Test](http://cdttoolkit.ece.iastate.edu/test)
 
 On the Test page, you will see the 1 test tool: Test. Click the respective 'Call to action' link to navigate to that tool page. You can also click the 'Prototype' button to the left of 'Test' to go back to [Prototype](#prototype).
 
+- [Tests](): The tests page follows the general tool page template. The goal of a test is to get the impact of your prototypes.
+   - [Creating a Test]():
+      - First, you can give your test a name by inputting into the 'Name' field.
+      - Then, you can optionally give your test a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
+      - You can input your test data into the 'Data' field.
+      - You can input the metric you are measuring in the 'Metric' field.
+      - You can input your goal for your test in the 'Goal' field.
+      - Click 'Create' to create your test or 'Cancel' to go back to the tool page.
 
-### Editing and Deleting Tools
+
+### Viewing, Editing, and Deleting Tools
+
 
 ### Comments
 
@@ -122,5 +178,3 @@ On the Test page, you will see the 1 test tool: Test. Click the respective 'Call
 
 ### [Teams](http://cdttoolkit.ece.iastate.edu/account/teams)
 
-
-## Code Overview
