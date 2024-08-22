@@ -48,6 +48,12 @@ The 'Account' dropdown will reveal a link to the [Projects Page](#projects) and 
 
 The 'Notes' area is used to quickly add thoughts during your design thinking process. This section will list your quick notes and allow you to add a new one by typing into the text field and clicking 'Create Note'. You can click on any of these notes to view them, and you can also click the red X next to them to delete them. You can also view these notes on the [Notes Page](#notes).
 
+### [Login](http://cdttoolkit.ece.iastate.edu/account/login)
+
+If you are not logged in, you can go to the login page by clicking 'Login' from the [navbar](#navbar). On the login page, click 'Log In With Google' to login. Click the Google account you want to login with. You may be asked to allow some permissions, which you can do. Then, you'll be taken to your profile where you will see your first name displayed on the screen. Anytime you click 'Login' when you are already logged in, you will be taken to this screen.
+
+To logout of your account, click the 'Logout' button from the [navbar](#navbar).
+
 ### [Learn](http://cdttoolkit.ece.iastate.edu/learn)
 
 The Learn page is a space for users to learn more about the design thinking process, however it is currently incomplete. There is some description written by Dr. Fila, but the Define stage onward is not complete.
@@ -104,34 +110,34 @@ On the Empathize page, you will see the 3 empathize tools: Empathy Maps, Journey
 
 On the Define page, you will see the 3 define tools: Need Statements, Abstraction Ladders, and Rocks. Click the respective 'Call to action' link to navigate to that tools page. You can also click the 'Empathize' button to the left of 'Define' to go back to [Empathize](#empathize) or the 'Ideate' button to the right of 'Define' to go to [Ideate](#ideate).
 
-- [Need Statements](): The need statements page follows the general tool page template. The goal of a need statement is to define what a student needs in a concise, simple statement.
-   - [Creating a Need Statement](): The structure of a need statement is the following: [User] needs (a way) to [Do Something] because [Insight about User]. Fill in each input to create your need statement. Click 'Create' to create your need statement or 'Cancel' to go back to the tool page.
-- [Abstraction Ladders](): The abstraction ladders page follows the general tool page template. The goal of an abstraction ladder is to state a problem, why it's a problem, and how to solve it.
-   - [Creating an Abstraction Ladder](): The abstraction ladder starts with one problem. The abstraction ladder will then go up and down to describe why that's a problem and how it's going to be solved.
+- [Need Statements](http://cdttoolkit.ece.iastate.edu/statements): The need statements page follows the general tool page template. The goal of a need statement is to define what a student needs in a concise, simple statement.
+   - [Creating a Need Statement](http://cdttoolkit.ece.iastate.edu/statements/new): The structure of a need statement is the following: [User] needs (a way) to [Do Something] because [Insight about User]. Fill in each input to create your need statement. Click 'Create' to create your need statement or 'Cancel' to go back to the tool page.
+- [Abstraction Ladders](http://cdttoolkit.ece.iastate.edu/abstractionladders): The abstraction ladders page follows the general tool page template. The goal of an abstraction ladder is to state a problem, why it's a problem, and how to solve it.
+   - [Creating an Abstraction Ladder](http://cdttoolkit.ece.iastate.edu/abstractionladders/new): The abstraction ladder starts with one problem. The abstraction ladder will then go up and down to describe why that's a problem and how it's going to be solved.
       - First, you can give your abstraction ladder a name by inputting into the 'Name' field.
       - The abstraction ladder will start with one block named 'Start'. To change the text of this block and define your problem, click on the block and type in the field below the abstraction ladder. The block text will update as you type.
       - To explain why, click the 'Add Why?' button. A new block will appear to the top right of the last block. You can change the text the same way you did for the starting block.
       - To explain how, click the 'Add How?' button. A new block will appear to the bottom right of the last block. You can change the text the same way you did for the starting block.
       - You can add as many whys and hows as you'd like.
       - Click 'Create' to create your abstraction ladder or 'Cancel' to go back to the tool page.
-- [Rocks](): The rocks page follows the general tool page template. The goal of rocks is to determine the importance of tasks and problems/improvements.
-   - [Creating Rocks](): To create a rock, give it a name by inputting into the 'Name' field and a description into the 'Description' field. You can also give it a cover by clicking 'Browse' and uploading an image. Then, give the rock a size (level of importance/priority). Click 'Create' to create your rock or 'Cancel' to go back to the tool page.
+- [Rocks](http://cdttoolkit.ece.iastate.edu/rocks): The rocks page follows the general tool page template. The goal of rocks is to determine the importance of tasks and problems/improvements.
+   - [Creating Rocks](http://cdttoolkit.ece.iastate.edu/rocks/new): To create a rock, give it a name by inputting into the 'Name' field and a description into the 'Description' field. You can also give it a cover by clicking 'Browse' and uploading an image. Then, give the rock a size (level of importance/priority). Click 'Create' to create your rock or 'Cancel' to go back to the tool page.
 
 
 ### [Ideate](http://cdttoolkit.ece.iastate.edu/ideate)
 
 On the Ideate page, you will see the 2 ideate tools: Lotus Blossoms and Brainstorms. Click the respective 'Call to action' link to navigate to that tools page. You can also click the 'Define' button to the left of 'Ideate' to go back to [Define](#define) or the 'Prototype' button to the right of 'Ideate' to go to [Prototype](#prototype).
 
-- [Lotus Blossoms](): The lotus blossoms page follows the general tool page template. The goal of a lotus blossom is to create ideas by building off of a central idea.
-   - [Creating a Lotus Blossom](): The lotus blossom starts with one block named 'Key Idea' in the center. This is the main idea you're building around.
+- [Lotus Blossoms](http://cdttoolkit.ece.iastate.edu/lotusblossoms): The lotus blossoms page follows the general tool page template. The goal of a lotus blossom is to create ideas by building off of a central idea.
+   - [Creating a Lotus Blossom](http://cdttoolkit.ece.iastate.edu/lotusblossoms/new): The lotus blossom starts with one block named 'Key Idea' in the center. This is the main idea you're building around.
       - First, you can give your lotus blossom a name by inputting into the 'Name' field.
       - Then, you can input your 'Key Idea' by typing in the input field below the lotus blossom. The key idea block text will change as you type.
       - To build off of your key idea, click the 'Create Annotation' button just above the input field. This will add a blossom to the left of the key idea, and add a new button, dropdown menu, and text input to the below the new blossom at the bottom of the lotus blossom. You can add up to 6 blossoms off of the key idea, 3 to the left, and 3 to the right.
       - Then, you can build off of these blossoms and create 2nd level blossoms. You can select you blossoms for the left and right side by using the dropdown menus that appeared. Once you select a blossom, clicking the corresponding 'Create Annotation' will create a second level blossom. You can follow this process for 3rd level blossoms as well. You can have 3 2nd level blossoms per blossom, and 2 3rd level blossoms per 2nd level blossom.
       - You can change the text of any blossom by selecting it with the dropdown by its text, then inputting into the corresponding input field.
       - Click 'Create' to create your lotus blossom or 'Cancel' to go back to the tool page.
-- [Brainstorms](): The brainstorms page follows the general tool page template. The goal of a brainstorm is to generate many ideas in one session.
-   - [Creating a Brainstorm]():
+- [Brainstorms](http://cdttoolkit.ece.iastate.edu/brainstorms): The brainstorms page follows the general tool page template. The goal of a brainstorm is to generate many ideas in one session.
+   - [Creating a Brainstorm](http://cdttoolkit.ece.iastate.edu/brainstorms/new):
       - First, you can give your brainstorm a name by inputting into the 'Name' field.
       - Then, you can optionally give your brainstorm a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
       - Then, in the 'Ideas' input field, you can list your ideas.
@@ -141,8 +147,8 @@ On the Ideate page, you will see the 2 ideate tools: Lotus Blossoms and Brainsto
 
 On the Prototype page, you will see the 1 prototype tool: Prototype. Click the respective 'Call to action' link to navigate to that tool page. You can also click the 'Ideate' button to the left of 'Prototype' to go back to [Ideate](#ideate) or the 'Test' button to the right of 'Prototype' to go to [Test](#test).
 
-- [Prototypes](): The prototypes page follows the general tool page template. The goal of a prototype is to form a real thing based on your ideas.
-   - [Creating a Prototype](): This tool is mostly incomplete, with not a lot of unique features. However you can still upload a PDF to store your prototype.
+- [Prototypes](http://cdttoolkit.ece.iastate.edu/prototypes): The prototypes page follows the general tool page template. The goal of a prototype is to form a real thing based on your ideas.
+   - [Creating a Prototype](http://cdttoolkit.ece.iastate.edu/prototypes/new): This tool is mostly incomplete, with not a lot of unique features. However you can still upload a PDF to store your prototype.
       - First, you can give your prototype a name by inputting into the 'Name' field.
       - Then, you can describe your prototype by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
       - Click 'Create' to create your prototype or 'Cancel' to go back to the tool page.
@@ -151,8 +157,8 @@ On the Prototype page, you will see the 1 prototype tool: Prototype. Click the r
 
 On the Test page, you will see the 1 test tool: Test. Click the respective 'Call to action' link to navigate to that tool page. You can also click the 'Prototype' button to the left of 'Test' to go back to [Prototype](#prototype).
 
-- [Tests](): The tests page follows the general tool page template. The goal of a test is to get the impact of your prototypes.
-   - [Creating a Test]():
+- [Tests](http://cdttoolkit.ece.iastate.edu/tests): The tests page follows the general tool page template. The goal of a test is to get the impact of your prototypes.
+   - [Creating a Test](http://cdttoolkit.ece.iastate.edu/tests/new):
       - First, you can give your test a name by inputting into the 'Name' field.
       - Then, you can optionally give your test a description by inputting into the 'Description' field and give it a cover by clicking 'Browse' and uploading an image.
       - You can input your test data into the 'Data' field.
@@ -162,19 +168,33 @@ On the Test page, you will see the 1 test tool: Test. Click the respective 'Call
 
 
 ### Viewing, Editing, and Deleting Tools
+When you are viewing a list of creations either on a tool page or in a [project](#projects) and click a creation, you will be taken to that creation's page. All tools are displayed in a straight-forward way, generally very similar to the format when creating it. You will also be able to see the date it was created and the user's email who created it. 
 
+In the rop right of the page, there's a 'Back' button, an 'Edit' button, and a 'Delete' button. The back button will take you back to the tool page. The edit button will allow you to edit the tool. the edit page will look the same as the creation page, but all fields will be populated with the current values of the tool. You can edit any part of a tool and click 'Update' to save your changes. You will then be taken back to viewing the tool. The delete button will permanently delete your creation. Deletion cannot be undone.
 
 ### Comments
+When viewing a creation, you will also see a comment section at the bottom of the screen. By typing in the text box and clicking 'Create' you can add comments to any tool. Comments will appear just above the text box along with the user's email that commented it, the time they commented it, and, if it's your comment, a 'Delete' button to permanently delete the comment. Comments can be viewed by anyone that has access to view the tool. 
 
+Your comments will also appear in your [notes page](#notes).
 
 ### [Notes](http://cdttoolkit.ece.iastate.edu/notes)
 
-
-### [Login](http://cdttoolkit.ece.iastate.edu/account/login)
-
+You can access your notes page from the Create > Home in the navbar then clicking 'Notes'. Your notes page will show all of your quick notes and comments in a normal tool page format.
 
 ### [Projects](http://cdttoolkit.ece.iastate.edu/projects)
 
+Projects are a way to easily group creations with each other, if they are a part of the the same journey, project, class, etc. You can add creations to your project for other users and teams to be able to view and participate in. To navigate to your projects, go to Account > Projects in the sidebar. The Projects page follows a similar format to the tool pages.
+
+To create a new project click '(New+)'. You can give your project a title by inputting into the 'Title' field. To add your tool creations, open the sidebar and navigate the dropdowns to the tools you want to add. Then, you can drag the tool creations you want to add to the 'Drag & Drop' area. The tool will appear in the 'Creations' box with a gray background. To remove a tool you have added, click on the tool and the gray background will go away. This means the tool creation is not selected and will not be included. The middle box will list the teams you are apart of. You can select as many teams as you'd like to include them in the project. All users in the teams can view and edit the project, and any tool creations in the project. The right box will list all users of the toolkit (should develop a search feature), and you can select any of them to include them in the project. When you are done adding your creations, teams, and users, click 'Create' to create the project or 'Cancel' to go back to the project page.
+
+When viewing your project, you will see your tools separated into the five stages. You can click each stage name to get more information about the stage (incomplete information) and view the tools. Clicking on any tool type name will allow you to view the tool creations of that type in the project in a grid format. When you click on a tool creation, you will see the tool creation view inside the project view. This works for all stages, tool types, and tool creations. 
+
+At the top of the project view you can view the users and teams that have access to the project. Clicking on a team will take you to that team page. You can edit or delete the project by using the respective buttons in the top right. They work similar to how any tool would.
 
 ### [Teams](http://cdttoolkit.ece.iastate.edu/account/teams)
 
+Teams are groups of users and can be assigned to projects. To go to the teams page, click 'Teams' in the navbar. You will see the teams you're a part of in a grid format. 
+
+To create a new team, click (New+). You can give your team a name by inputting into the 'Name' field. Then, in the box below, you can select any projects you're a part of to assign the team to. You can select as many projects as you'd like. To add users to the team, click the '+' next to 'Add User'. In the fields that appear, type the users' emails into the fields. Click 'Create' to create the team.
+
+Once you create the team, you will be viewing the team. You will see a list of the team's members and projects. You will also see the name of the user that created the team. You can click on the projects to view the projects. When you go to the projects, you will see that the new team is now assigned to the project. Anyone in the team can view the team page and any of the projects the team is assigned to. You can edit and delete the team by clicking 'Edit' and 'Delete'. The 'Reflections' section is currently incomplete.
