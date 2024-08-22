@@ -21,7 +21,7 @@
     </div>
     <div class="form-item">
           <select name="teams" id="teams" multiple>
-            <% teams.forEach(team => { console.log(object.teams[0]._id + " " + team._id);%>
+            <% teams.forEach(team => { %>
                   <% if(contains(team, object.teams)) { %> <option selected label="<%= team.name %>" value="<%= team.id %>"> <% } else { %> <option label="<%= team.name %>" value="<%= team.id %>"> <% } %>
             <% }) %>
         </select>
