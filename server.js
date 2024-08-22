@@ -154,4 +154,4 @@ app.use('/notes', notesRouter)
 app.use('/auth', authRouter)
 app.use('/account', accountRouter)
 
-app.listen(process.env.PORT || process.env.PORT)
+app.listen(process.env.PORT)

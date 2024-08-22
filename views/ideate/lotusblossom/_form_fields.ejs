@@ -237,21 +237,59 @@
         // need the dropdown menus to appear for each blossom level, doing a dfs
 
             setTimeout (function() {
-                let selLeft = document.getElementById('oneLeftSelect');
-                let option = document.createElement('option');
-                document.getElementById('oneLeft').hidden = false;
-                console.log(centernode.descendants[0].value);
-                option.value = JSON.stringify(centernode.descendants[0].value);
-                option.id = centernode.descendants[0].value.content;
-                option.text = centernode.descendants[0].value.content;
-                option.selected = true;
-                selLeft.appendChild(option);
+                let selLeftOne = document.getElementById('oneLeftSelect');
+                let selRightOne = document.getElementById('oneRightSelect');
+                let selLeftTwo = document.getElementById('twoLeftSelect');
+                let selRightTwo = document.getElementById('twoRightSelect');
+                let selLeftThree = document.getElementById('threeLeftSelect');
+                let selRightThree = document.getElementById('threeRightSelect');
+                let option;
+                
                 for(let i = 0; i < centernode.descendants.length; i++) {
+                    option = document.createElement('option');
+                    document.getElementById('oneLeft').hidden = false;
+                    console.log(centernode.descendants[i].value);
+                    option.value = JSON.stringify(centernode.descendants[i].value);
+                    option.id = centernode.descendants[i].value.content;
+                    option.text = centernode.descendants[i].value.content;
+                    option.selected = true;
+                    if(i % 2 == 0) {
+                        selLeftOne.appendChild(option);
+                    } else {
+                        document.getElementById('oneRight').hidden = false;
+                        selRightOne.appendChild(option);
+                    }
                     if(centernode.descendants[i].descendants.length > 0) {
-                        document.getElementById('twoLeft').hidden = false;
                         for(let j = 0; j < centernode.descendants[i].descendants.length; j++) {
+                            option = document.createElement('option');
+                            document.getElementById('twoLeft').hidden = false;
+                            console.log(centernode.descendants[i].descendants[j].value);
+                            option.value = JSON.stringify(centernode.descendants[i].descendants[j].value);
+                            option.id = centernode.descendants[i].descendants[j].value.content;
+                            option.text = centernode.descendants[i].descendants[j].value.content;
+                            option.selected = true;
+                            if(i % 2 == 0) {
+                                selLeftTwo.appendChild(option);
+                            } else {
+                                document.getElementById('twoRight').hidden = false;
+                                selRightTwo.appendChild(option);
+                            }
                             if(centernode.descendants[i].descendants[j].length > 0) {
-                                document.getElementById('threeLeft').hidden = false;
+                                for(let k = 0; j < centernode.descendants[i].descendants[j].length; k++) {
+                                    option = document.createElement('option');
+                                    document.getElementById('threeLeft').hidden = false;
+                                    console.log(centernode.descendants[i].descendants[j].descendants[k].value);
+                                    option.value = JSON.stringify(centernode.descendants[i].descendants[j].descendants[k].value);
+                                    option.id = centernode.descendants[i].descendants[j].descendants[k].value.content;
+                                    option.text = centernode.descendants[i].descendants[j].descendants[k].value.content;
+                                    option.selected = true;
+                                    if(i % 2 == 0) {
+                                        selLeftThree.appendChild(option);
+                                    } else {
+                                        document.getElementById('threeRight').hidden = false;
+                                        selRightThree.appendChild(option);
+                                    }
+                                }   
                             }
                         }
                     }
@@ -908,7 +946,6 @@
             // console.log(ann);
             // console.log(centernode.value);
             if(ann.xValue == centernode.value.xValue && ann.yValue == centernode.value.yValue){
-                console.log("in")
                 ann.content = formatLabel(val, 30);
             }
         })
@@ -956,6 +993,7 @@
         let op = sel.options[sel.selectedIndex];
         centernode.descendants.forEach(child => {
             if(JSON.stringify(child.value) == sel.value){
+                // console.log("here");
                 editNodeAnnotationText(child, val, op);
             }
         })
@@ -1021,8 +1059,10 @@
 
     function editNodeAnnotationText(node, val, op) {
         annotations.forEach(ann => {
-            console.log(ann + " | " + node.value);
-            if(ann == node.value){
+            console.log(ann.content + " | " + node.value.content);
+            // old solution: if(ann == node.value){
+            if(ann.content[0] == node.value.content[0]){
+                console.log("here")
                 ann.content = formatLabel(val, 30);
                 node.value = ann;
                 op.id = ann.content;

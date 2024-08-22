@@ -20,15 +20,6 @@
     <%- include('../../partials/multiselect.ejs', { id: 'children' }) %>
     </div>
     <div class="form-item">
-      <% function contains(obj, list){ %>
-        <%  var i; %>
-        <%  for (i = 0; i < list.length; i++) { %>
-          <%   if (list[i].id === obj.id) { %>
-            <%     return true; %>
-            <%   } %>
-            <%  } %>
-            <% return false; %>
-            <% } %>
           <select name="teams" id="teams" multiple>
             <% teams.forEach(team => { %>
                   <% if(contains(team, object.teams)) { %> <option selected label="<%= team.name %>" value="<%= team.id %>"> <% } else { %> <option label="<%= team.name %>" value="<%= team.id %>"> <% } %>
@@ -40,7 +31,7 @@
       <% function contains(obj, list){ %>
         <%  var i; %>
         <%  for (i = 0; i < list.length; i++) { %>
-          <%   if (list[i].id === obj.id) { %>
+          <%   if (list[i]._id == obj.id) { %>
             <%     return true; %>
             <%   } %>
             <%  } %>
